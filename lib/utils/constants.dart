@@ -9,4 +9,5 @@ class AppConstants {
   static const double xlFontSize = 20.0;
   static const double lgButtonHeight = 55.0;
   static const double smButtonHeight = 40.0;
+  static const double defaultCustomIconSize = 20.0;
 }
