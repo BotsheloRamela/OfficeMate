@@ -10,6 +10,8 @@ class Office {
   final int occupantsCount;
   final int officeCapacity;
   final String officeColor;
+  final String email;
+  final String phone;
   final List<OfficeWorker> workers;
 
   Office({
@@ -18,6 +20,8 @@ class Office {
     required this.occupantsCount,
     required this.officeCapacity,
     required this.officeColor,
+    required this.email,
+    required this.phone,
     this.workers = const [],
   });
 

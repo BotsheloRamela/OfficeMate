@@ -43,6 +43,8 @@ class FirebaseService {
             occupantsCount: officeData['occupants_count'] ?? 0, 
             officeCapacity: officeData['office_capacity'] ?? 0,
             officeColor: officeData['office_color'] ?? '',
+            email: officeData['email'] ?? '',
+            phone: officeData['phone'] ?? '',
             workers: workerMap.values.toList(),
           );
 
