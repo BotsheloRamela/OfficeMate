@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 occupantsCount: 5,
                 officeCapacity: 10,
                 location: 'Mountain View, CA',
-                officeColor: '0xFF4285F4',
+                officeColor: '0xFFFE9B70',
                 email: 'info@google.com',
                 phone: '1-800-123-4567',
               )

@@ -113,11 +113,16 @@ Widget officeCardMainContent(
             style: const TextStyle(
               fontSize: AppConstants.lgFontSize,
               fontWeight: FontWeight.bold,
+              color: AppColors.secondaryColor
             ),
           ),
           const Spacer(),
           IconButton(
-            icon: SvgPicture.asset(CustomIcons.edit, width: AppConstants.defaultCustomIconSize,),
+            icon: SvgPicture.asset(
+              CustomIcons.edit, 
+              width: AppConstants.defaultCustomIconSize,
+              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            ),
             onPressed: () {
               // TODO: Implement edit functionality
             },
@@ -136,14 +141,14 @@ Widget officeCardMainContent(
                   style: const TextStyle(
                     fontSize: AppConstants.smFontSize,
                     fontWeight: FontWeight.bold, // Making the count bold
-                    color: Colors.grey,
+                    color: AppColors.secondaryColor,
                   ),
                 ),
                 const TextSpan(
                   text: ' Staff Members in Office',
                   style: TextStyle(
                     fontSize: AppConstants.smFontSize,
-                    color: Colors.grey,
+                    color: AppColors.secondaryColor,
                   ),
                 ),
               ],
@@ -153,7 +158,7 @@ Widget officeCardMainContent(
       ),
       const SizedBox(height: 10),
       const Divider(
-        color: Colors.grey,
+        color: AppColors.secondaryColor,
         height: 1,
       ),
       // const SizedBox(height: 5),
@@ -172,7 +177,7 @@ Widget officeCardMainContent(
               'More Info',
               style: TextStyle(
                 fontSize: AppConstants.xsFontSize,
-                color: Colors.grey,
+                color: AppColors.secondaryColor,
               ),
             ),
             const SizedBox(width: 10),
@@ -182,6 +187,7 @@ Widget officeCardMainContent(
               child: SvgPicture.asset(
                 CustomIcons.chevron,
                 width: AppConstants.defaultCustomIconSize,
+                colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
               ),
             )
           ],
@@ -196,13 +202,17 @@ Widget officeCardExpandedContent(String location, String email, String phone, in
     children: [
       Row(
         children: [
-          SvgPicture.asset(CustomIcons.phone, width: AppConstants.defaultCustomIconSize),
+          SvgPicture.asset(
+            CustomIcons.phone, 
+            width: AppConstants.defaultCustomIconSize,
+            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+          ),
           const SizedBox(width: 10),
           Text(
             phone,
             style: const TextStyle(
               fontSize: AppConstants.xsFontSize,
-              color: Colors.grey,
+              color: AppColors.secondaryColor,
             ),
           ),
         ],
@@ -210,13 +220,17 @@ Widget officeCardExpandedContent(String location, String email, String phone, in
       const SizedBox(height: 15),
       Row(
         children: [
-          SvgPicture.asset(CustomIcons.email, width: AppConstants.defaultCustomIconSize),
+          SvgPicture.asset(
+            CustomIcons.email, 
+            width: AppConstants.defaultCustomIconSize,
+            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+          ),
           const SizedBox(width: 10),
           Text(
             email,
             style: const TextStyle(
               fontSize: AppConstants.xsFontSize,
-              color: Colors.grey,
+              color: AppColors.secondaryColor,
             ),
           ),
         ],
@@ -224,13 +238,17 @@ Widget officeCardExpandedContent(String location, String email, String phone, in
       const SizedBox(height: 15),
       Row(
         children: [
-          SvgPicture.asset(CustomIcons.filledPeople, width: AppConstants.defaultCustomIconSize),
+          SvgPicture.asset(
+            CustomIcons.filledPeople, 
+            width: AppConstants.defaultCustomIconSize,
+            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+          ),
           const SizedBox(width: 10),
           Text(
             "Office Capacity: $officeCapacity",
             style: const TextStyle(
               fontSize: AppConstants.xsFontSize,
-              color: Colors.grey,
+              color: AppColors.secondaryColor,
             ),
           ),
         ],
@@ -238,13 +256,17 @@ Widget officeCardExpandedContent(String location, String email, String phone, in
       const SizedBox(height: 15),
       Row(
         children: [
-          SvgPicture.asset(CustomIcons.location, width: AppConstants.defaultCustomIconSize),
+          SvgPicture.asset(
+            CustomIcons.location, 
+            width: AppConstants.defaultCustomIconSize,
+            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+          ),
           const SizedBox(width: 10),
           Text(
             location,
             style: const TextStyle(
               fontSize: AppConstants.xsFontSize,
-              color: Colors.grey,
+              color: AppColors.secondaryColor,
             ),
           ),
         ],
