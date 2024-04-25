@@ -7,7 +7,6 @@ part 'office.g.dart';
 class Office {
   final String name;
   final String location;
-  final int occupantsCount;
   final int officeCapacity;
   final String officeColor;
   final String officeId;
@@ -18,7 +17,6 @@ class Office {
   Office({
     required this.name,
     required this.location,
-    required this.occupantsCount,
     required this.officeCapacity,
     required this.officeColor,
     required this.officeId,

@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  int officeWorkerCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -22,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<HomeScreenViewModel>(context, listen: false).fetchOffices();
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +62,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final office = viewModel.offices[index];
+                            final officeWorkerCount = viewModel.officeWorkerCount[office.officeId] as int;
                             return GestureDetector(
                               onTap: () {
                                 // Navigate to the office details screen
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => OfficeDetailsScreen(office: office,),
+                                    builder: (context) => OfficeDetailsScreen(
+                                      office: office, 
+                                      workerCount: officeWorkerCount
+                                    ),
                                   ),
                                 );
                               },
@@ -72,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: OfficeCard(
                                   companyName: office.name,
-                                  occupantsCount: office.occupantsCount,
+                                  occupantsCount: officeWorkerCount,
                                   officeCapacity: office.officeCapacity,
                                   location: office.location,
                                   officeColor: office.officeColor,

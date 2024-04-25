@@ -39,7 +39,6 @@ class FirebaseService {
           final office = Office(
             name: officeData['name'],
             location: officeData['location'],
-            occupantsCount: officeData['occupants_count'] ?? 0, 
             officeCapacity: officeData['office_capacity'] ?? 0,
             officeColor: officeData['office_color'] ?? '',
             officeId: officeData['office_id'],
@@ -111,6 +110,32 @@ class FirebaseService {
     } catch (e) {
       log.e('Error creating worker: $e');
       return false;
+    }
+  }
+
+  /// Method to get the number of workers for an office based on officeId
+  Future<int> getWorkerCountForOffice(String officeId) async {
+    try {
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
+
+      if (workerSnapshot.exists) {
+        int workerCount = 0;
+        
+        for (var workerEntry in workerSnapshot.children) {
+          final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+          final workerOfficeId = workerMap['office_id'];
+          if (workerOfficeId == officeId) {
+            workerCount++;
+          }
+        }
+        log.i('Fetched $workerCount workers for office $officeId');
+        return workerCount;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      log.e('Error fetching workers for office $officeId: $e');
+      rethrow;
     }
   }
 }

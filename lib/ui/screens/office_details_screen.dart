@@ -9,7 +9,12 @@ import 'package:office_mate/utils/constants.dart';
 
 class OfficeDetailsScreen extends StatefulWidget {
   final Office office;
-  const OfficeDetailsScreen({super.key, required this.office});
+  final int workerCount;
+  const OfficeDetailsScreen({
+    super.key, 
+    required this.office,
+    required this.workerCount
+  });
 
   @override
   State<OfficeDetailsScreen> createState() => _OfficeDetailsScreenState();
@@ -25,7 +30,6 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
   Widget build(BuildContext context) {
 
     Color highlightColor = Color(int.parse(widget.office.officeColor));
-
 
     OfficeDetailsViewModel viewModel = OfficeDetailsViewModel();
 
@@ -71,7 +75,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             children: [
               OfficeCard(
                 companyName: widget.office.name,
-                occupantsCount: widget.office.occupantsCount,
+                occupantsCount: widget.workerCount,
                 officeCapacity: widget.office.officeCapacity,
                 location: widget.office.location,
                 officeColor: widget.office.officeColor,
@@ -96,7 +100,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                     ),
                   ),
                   Text(
-                    '${widget.office.occupantsCount}',
+                    '${widget.workerCount}',
                     style: const TextStyle(
                       fontSize: AppConstants.mdFontSize,
                       color: AppColors.secondaryColor,
