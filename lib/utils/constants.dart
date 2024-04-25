@@ -13,6 +13,7 @@ class AppConstants {
   static const double smButtonHeight = 40.0;
   static const double defaultCustomIconSize = 20.0;
   static const double lgCustomIconSize = 25.0;
+  static const double avatarSize = 50.0;
 }
 
 class AppColors {
