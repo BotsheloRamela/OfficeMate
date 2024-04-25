@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:office_mate/ui/screens/office_details_screen.dart';
 import 'package:office_mate/ui/viewmodels/home_screen_viewmodel.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
 import 'package:office_mate/utils/constants.dart';
@@ -55,14 +56,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: viewModel.offices.length,
                           itemBuilder: (context, index) {
                             final office = viewModel.offices[index];
-                            return OfficeCard(
-                              companyName: office.name,
-                              occupantsCount: office.occupantsCount,
-                              officeCapacity: office.officeCapacity,
-                              location: office.location,
-                              officeColor: office.officeColor,
-                              email: office.email,
-                              phone: office.phone,
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigate to the office details screen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OfficeDetailsScreen(office: office,),
+                                  ),
+                                );
+                              },
+                              child: OfficeCard(
+                                companyName: office.name,
+                                occupantsCount: office.occupantsCount,
+                                officeCapacity: office.officeCapacity,
+                                location: office.location,
+                                officeColor: office.officeColor,
+                                email: office.email,
+                                phone: office.phone,
+                              ),
                             );
                           },
                         )
