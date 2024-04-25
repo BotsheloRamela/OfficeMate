@@ -13,6 +13,8 @@ dependencies:
   firebase_database: ^10.5.4
   logger: ^2.2.0
   json_annotation: ^4.8.1
+  flutter_svg: ^2.0.10+1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +25,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
+    - assets/icons/
