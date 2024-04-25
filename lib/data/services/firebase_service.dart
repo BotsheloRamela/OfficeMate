@@ -149,8 +149,8 @@ class FirebaseService {
 
         for (var workerEntry in workerSnapshot.children) {
           final workerMap = workerEntry.value as Map<dynamic, dynamic>;
-          final workerOfficeId = workerMap['office_id'];
-          if (workerOfficeId == worker.officeId) {
+          final workerId = workerMap['worker_id'];
+          if (workerId == worker.workerId) {
             // Update the worker
             await workerEntry.ref.update({
               'name': worker.name,
