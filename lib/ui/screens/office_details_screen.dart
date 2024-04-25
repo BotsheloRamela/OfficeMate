@@ -46,7 +46,10 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                 phone: widget.office.phone,
               ),
               const SizedBox(height: 30.0),
-              CustomSearchBar(controller: _searchBarController),
+              CustomSearchBar(
+                controller: _searchBarController,
+                borderColor: widget.office.officeColor,
+              ),
               const SizedBox(height: 30.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
