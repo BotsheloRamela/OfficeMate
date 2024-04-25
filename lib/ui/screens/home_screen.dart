@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
         floatingActionButton: const FloatingActionButton(
           onPressed: null, // TODO: Implement onPressed
           backgroundColor: AppColors.primaryColor,
