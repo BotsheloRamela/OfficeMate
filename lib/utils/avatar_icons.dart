@@ -28,4 +28,8 @@ class AvatarIcons {
         return avatar1;
     }
   }
+
+  static List<String> getAllAvatars() {
+    return [avatar1, avatar2, avatar3, avatar4, avatar5, avatar6, avatar7];  
+  }
 }

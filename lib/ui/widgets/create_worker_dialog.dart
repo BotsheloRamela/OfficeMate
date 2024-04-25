@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:office_mate/ui/widgets/default_textfield.dart';
+import 'package:office_mate/utils/avatar_icons.dart';
 import 'package:office_mate/utils/constants.dart';
 import 'package:office_mate/utils/custom_icons.dart';
 
@@ -23,6 +24,7 @@ class CreateWorkerDialog extends StatefulWidget {
 
 class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
   int currentCreateWorkerStep = 0;
+  int selectedAvatar = 0;
 
   void nextStep() {
     setState(() {
@@ -36,16 +38,17 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
     });
   }
 
-  void reset() {
+  void selectAvatar(int index) {
     setState(() {
-      currentCreateWorkerStep = 0;
-      widget.firstNameController.clear();
-      widget.lastNameController.clear();
+      selectedAvatar = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+    Color highlightColor = Color(int.parse(widget.highlightColor));
+
     return Dialog(
       backgroundColor: AppColors.backgroundColor,
       shape: RoundedRectangleBorder(
@@ -59,9 +62,21 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                if (currentCreateWorkerStep == 1)
+                  GestureDetector(
+                    onTap: goBack,
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: AppColors.secondaryColor,
+                      size: AppConstants.defaultCustomIconSize,
+                    )
+                  ),
                 const Text(
                   'New Staff Member',
                   style: TextStyle(
@@ -70,7 +85,6 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
                     color: AppColors.secondaryColor
                   ),
                 ),
-                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -78,53 +92,53 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
                   child: SvgPicture.asset(
                     CustomIcons.close,
                     colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-                    height: AppConstants.lgCustomIconSize,
+                    height: AppConstants.defaultCustomIconSize,
                   ),
                 )
               ],
             ),
             const SizedBox(height: 20),
-            DefaultTextField(
-              controller: widget.firstNameController,
-              highlightColor: widget.highlightColor,
-              hintText: 'First Name',
-            ),
-            const SizedBox(height: 10),
-            DefaultTextField(
-              controller: widget.lastNameController,
-              highlightColor: widget.highlightColor,
-              hintText: 'Last Name',
-            ),
-            const SizedBox(height: 20),
+            if (currentCreateWorkerStep == 0)
+              newMemberDetails(
+                widget.firstNameController,
+                widget.lastNameController,
+                widget.highlightColor
+              ),
+            if (currentCreateWorkerStep == 1)
+              newMemberAvatar(selectAvatar, selectedAvatar, highlightColor),
+            const SizedBox(height: 25),
             Center(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  currentCreateWorkerStep == 0 ? Icon(Icons.circle, size: 10, color: Color(int.parse(widget.highlightColor))) 
-                    : Icon(Icons.trip_origin, size: 10, color: Color(int.parse(widget.highlightColor))),
-                  currentCreateWorkerStep == 0 ? Icon(Icons.trip_origin, size: 10, color: Color(int.parse(widget.highlightColor))) 
-                    : Icon(Icons.circle, size: 10, color: Color(int.parse(widget.highlightColor))),
+                  currentCreateWorkerStep == 0 ? Icon(Icons.circle, size: 10, color: highlightColor) 
+                    : Icon(Icons.trip_origin, size: 10, color: highlightColor),
+                  currentCreateWorkerStep == 0 ? Icon(Icons.trip_origin, size: 10, color: highlightColor) 
+                    : Icon(Icons.circle, size: 10, color: highlightColor),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigator.of(context).pop();
-                nextStep();
-              },
-              style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(Color(int.parse(widget.highlightColor))),
-                padding: MaterialStateProperty.all<EdgeInsets>(
-                  const EdgeInsets.symmetric(horizontal: 80, vertical: 12)
-                )
-              ),
-              child: const Text(
-                'NEXT',
-                style: TextStyle(
-                  color: Colors.white
+            const SizedBox(height: 25),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigator.of(context).pop();
+                  nextStep();
+                },
+                style: ButtonStyle(
+                  elevation: MaterialStateProperty.all(0),
+                  backgroundColor: MaterialStateProperty.all(highlightColor),
+                  padding: MaterialStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 12)
+                  )
+                ),
+                child: Text(
+                  currentCreateWorkerStep == 0 ? 'NEXT' : 'ADD STAFF MEMBER',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: AppConstants.xsFontSize
+                  ),
                 ),
               ),
             ),
@@ -133,4 +147,79 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
       ),
     );
   }
+}
+
+Widget newMemberDetails(
+  TextEditingController firstNameController, 
+  TextEditingController lastNameController, 
+  String highlightColor
+  ) {
+  return Column(
+    children: [
+       DefaultTextField(
+        controller: firstNameController,
+        highlightColor: highlightColor,
+        hintText: 'First Name',
+      ),
+      const SizedBox(height: 10),
+      DefaultTextField(
+        controller: lastNameController,
+        highlightColor: highlightColor,
+        hintText: 'Last Name',
+      ),
+    ],
+  );
+}
+
+Widget newMemberAvatar(
+  void Function(int) selectAvatar, 
+  int selectedIndex,
+  Color higlightColor
+  ){
+  List<String> avatars = AvatarIcons.getAllAvatars();
+  
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        "Avatar",
+        style: TextStyle(
+          color: AppColors.secondaryColor,
+          fontSize: AppConstants.mdFontSize,
+          fontWeight: FontWeight.bold
+        ),
+      ),
+      const SizedBox(height: 20),
+      Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 10.0,
+        runSpacing: 20.0,
+        children: [
+          for (int index = 0; index < avatars.length; index++)
+            GestureDetector(
+              onTap: () {
+                selectAvatar(avatars.indexOf(avatars[index]));
+              },
+              child: Container(
+                padding: const EdgeInsets.all(3.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selectedIndex == index
+                        ? higlightColor
+                        : Colors.transparent, // No ring when not selected
+                    width: 3.0,
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage(avatars[index]),
+                ),
+              )
+            ),
+        ],
+      ),
+    ],
+  );
 }
