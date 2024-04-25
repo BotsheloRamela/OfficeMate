@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:office_mate/data/models/office.dart';
 import 'package:office_mate/data/models/office_worker.dart';
 import 'package:office_mate/utils/logging.dart';
+import 'package:uuid/uuid.dart';
 
 class FirebaseService {
   final log = logger;
@@ -24,7 +25,7 @@ class FirebaseService {
   /// Method to fetch offices from Firebase
   Future<List<Office>> getOffices() async {
     try {
-      final officeSnapshot  = await _databaseOfficeRef.get();
+      final officeSnapshot = await _databaseOfficeRef.get();
 
       if (officeSnapshot.exists) {
         // Iterate through each office entry
@@ -178,11 +179,17 @@ class FirebaseService {
   Future<bool> deleteWorker(String workerId) async {
     try {
       // Find the worker by workerId
-      final workerSnapshot = await _databaseOfficeWorkersRef.orderByChild('worker_id').equalTo(workerId).get();
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
 
       if (workerSnapshot.exists) {
         // Delete the worker
-        await workerSnapshot.ref.remove();
+        for (var workerEntry in workerSnapshot.children) {
+          final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+          final workerId = workerMap['worker_id'];
+          if (workerId == workerId) {
+            await workerEntry.ref.remove();
+          }
+        }
 
         log.i('Worker with ID $workerId deleted successfully');
         return true;
@@ -192,6 +199,92 @@ class FirebaseService {
       }
     } catch (e) {
       log.e('Error deleting worker: $e');
+      return false;
+    }
+  }
+
+  /// Method to create a new office and save it to Firebase
+  Future<bool> createOffice(Office office) async {
+    try {
+      // Set the office data with the generated ID
+      await _databaseOfficeRef.push().set({
+        'name': office.name,
+        'location': office.location,
+        'office_capacity': office.officeCapacity,
+        'office_color': office.officeColor,
+        'email': office.email,
+        'phone': office.phone,
+        'office_id': const Uuid().v4(),
+      });
+
+      log.i('Office created successfully: ${office.name}');
+      return true;
+    } catch (e) {
+      log.e('Error creating office: $e');
+      return false;
+    }
+  }
+
+  /// Method to update an existing office in Firebase
+  Future<bool> updateOffice(Office updatedOffice) async {
+    try {
+      // Find the office by officeId
+      final officeSnapshot = await _databaseOfficeRef.get();
+
+      if (officeSnapshot.exists) {
+        // Update the office data
+        for (var officeEntry in officeSnapshot.children) {
+          final officeData = officeEntry.value as Map<dynamic, dynamic>;
+          final officeId = officeData['office_id'];
+          if (officeId == updatedOffice.officeId) {
+            await officeEntry.ref.update({
+              'name': updatedOffice.name,
+              'location': updatedOffice.location,
+              'office_capacity': updatedOffice.officeCapacity,
+              'office_color': updatedOffice.officeColor,
+              'email': updatedOffice.email,
+              'phone': updatedOffice.phone,
+              'office_id': updatedOffice.officeId,
+            });
+          }
+        }
+
+        log.i('Office updated successfully: ${updatedOffice.name}');
+        return true;
+      } else {
+        log.i('Office with ID ${updatedOffice.officeId} not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error updating office: $e');
+      return false;
+    }
+  }
+
+  /// Method to delete an existing office from Firebase
+  Future<bool> deleteOffice(String officeId) async {
+    try {
+      // Find the office by officeId
+      final officeSnapshot = await _databaseOfficeRef.get();
+
+      if (officeSnapshot.exists) {
+        // Delete the office
+        for (var officeEntry in officeSnapshot.children) {
+          final officeData = officeEntry.value as Map<dynamic, dynamic>;
+          final officeId = officeData['office_id'];
+          if (officeId == officeId) {
+            await officeEntry.ref.remove();
+          }
+        }
+
+        log.i('Office with ID $officeId deleted successfully');
+        return true;
+      } else {
+        log.i('Office with ID $officeId not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error deleting office: $e');
       return false;
     }
   }
