@@ -151,6 +151,8 @@ class FirebaseService {
           'name': worker.name,
           'family_name': worker.familyName,
           'avatar_id': worker.avatarId,
+          'worker_id': worker.workerId,
+          'office_id': worker.officeId,
         });
 
         log.i('Worker updated successfully: ${worker.name}');
