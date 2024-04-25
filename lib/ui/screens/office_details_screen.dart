@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:office_mate/data/models/office.dart';
+import 'package:office_mate/ui/widgets/create_worker_dialog.dart';
 import 'package:office_mate/ui/widgets/custom_search_bar.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
 import 'package:office_mate/utils/avatar_icons.dart';
@@ -16,16 +17,32 @@ class OfficeDetailsScreen extends StatefulWidget {
 class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
 
   final _searchBarController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
+    void showCreateWorkerDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CreateWorkerDialog(
+            firstNameController: firstNameController,
+            lastNameController: lastNameController,
+            highlightColor: widget.office.officeColor,
+          );
+        },
+      );
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        floatingActionButton: const FloatingActionButton(
-          onPressed: null, // TODO: Implement onPressed
+        floatingActionButton: FloatingActionButton(
+          onPressed: showCreateWorkerDialog,
           backgroundColor: AppColors.primaryColor,
-          child: Icon(Icons.add, color: Colors.white),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
         appBar: AppBar(
           title: const Text('Office'),
