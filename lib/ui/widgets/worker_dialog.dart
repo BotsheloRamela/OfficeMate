@@ -53,11 +53,17 @@ class _WorkerDialogState extends State<WorkerDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    if (widget.isEditing) {
+      setState(() {
+        selectedAvatar = int.parse(widget.avatarId!) - 1;
+      });
+    }
+  }
 
-    selectedAvatar = widget.avatarId != null 
-      ? int.parse(widget.avatarId!) - 1  
-      : 0;
+  @override
+  Widget build(BuildContext context) {
 
     return Dialog(
       backgroundColor: AppColors.backgroundColor,
@@ -133,10 +139,12 @@ class _WorkerDialogState extends State<WorkerDialog> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigator.of(context).pop();
                   currentDialogStep == 0 ? nextStep() 
                     : {
-                      widget.saveWorker(selectedAvatar.toString()),
+                      widget.saveWorker(
+                        // Pass the selected avatar id + 1 to match the index
+                        (selectedAvatar + 1).toString() 
+                      ),
                       Navigator.of(context).pop()
                     };
                 },
@@ -163,79 +171,81 @@ class _WorkerDialogState extends State<WorkerDialog> {
       ),
     );
   }
-}
 
-Widget newMemberDetails(
-  TextEditingController firstNameController, 
-  TextEditingController lastNameController, 
-  Color highlightColor
-  ) {
-  return Column(
-    children: [
-       DefaultTextField(
-        controller: firstNameController,
-        highlightColor: highlightColor,
-        hintText: 'First Name',
-      ),
-      const SizedBox(height: 10),
-      DefaultTextField(
-        controller: lastNameController,
-        highlightColor: highlightColor,
-        hintText: 'Last Name',
-      ),
-    ],
-  );
-}
-
-Widget newMemberAvatar(
-  void Function(int) selectAvatar, 
-  int selectedIndex,
-  Color higlightColor
-  ){
-  List<String> avatars = AvatarIcons.getAllAvatars();
-  
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        "Avatar",
-        style: TextStyle(
-          color: AppColors.secondaryColor,
-          fontSize: AppConstants.mdFontSize,
-          fontWeight: FontWeight.bold
+  Widget newMemberDetails(
+    TextEditingController firstNameController, 
+    TextEditingController lastNameController, 
+    Color highlightColor
+    ) {
+    return Column(
+      children: [
+        DefaultTextField(
+          controller: firstNameController,
+          highlightColor: highlightColor,
+          hintText: 'First Name',
         ),
-      ),
-      const SizedBox(height: 20),
-      Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 10.0,
-        runSpacing: 20.0,
-        children: [
-          for (int index = 0; index < avatars.length; index++)
-            GestureDetector(
-              onTap: () {
-                selectAvatar(avatars.indexOf(avatars[index]));
-              },
-              child: Container(
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: selectedIndex == index
-                        ? higlightColor
-                        : Colors.transparent, // No ring when not selected
-                    width: 3.0,
+        const SizedBox(height: 10),
+        DefaultTextField(
+          controller: lastNameController,
+          highlightColor: highlightColor,
+          hintText: 'Last Name',
+        ),
+      ],
+    );
+  }
+
+  Widget newMemberAvatar(
+    void Function(int) selectAvatar, 
+    int selectedIndex,
+    Color higlightColor
+    ){
+    List<String> avatars = AvatarIcons.getAllAvatars();
+    
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Avatar",
+          style: TextStyle(
+            color: AppColors.secondaryColor,
+            fontSize: AppConstants.mdFontSize,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+        const SizedBox(height: 20),
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 10.0,
+          runSpacing: 20.0,
+          children: [
+            for (int index = 0; index < avatars.length; index++)
+              GestureDetector(
+                onTap: () {
+                  selectAvatar(avatars.indexOf(avatars[index]));
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(3.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: selectedIndex == index
+                          ? higlightColor
+                          : Colors.transparent, // No ring when not selected
+                      width: 3.0,
+                    ),
                   ),
-                ),
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundImage: AssetImage(avatars[index]),
-                ),
-              )
-            ),
-        ],
-      ),
-    ],
-  );
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage(avatars[index]),
+                  ),
+                )
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
 }
+
