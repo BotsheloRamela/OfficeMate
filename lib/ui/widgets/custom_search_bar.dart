@@ -5,7 +5,7 @@ import 'package:office_mate/utils/custom_icons.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController controller;
-  final String borderColor;
+  final Color borderColor;
   const CustomSearchBar({super.key, required this.controller, required this.borderColor});
 
   @override
@@ -20,7 +20,7 @@ class CustomSearchBar extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         border: Border.all(
-          color: Color(int.parse(borderColor)).withOpacity(0.2),
+          color: borderColor.withOpacity(0.2),
           width: 1,
         ),
       ),

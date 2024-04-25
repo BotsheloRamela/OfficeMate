@@ -9,7 +9,7 @@ import 'package:office_mate/utils/custom_icons.dart';
 class CreateWorkerDialog extends StatefulWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
-  final String highlightColor;
+  final Color highlightColor;
 
   const CreateWorkerDialog({
     super.key, 
@@ -46,8 +46,6 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
 
   @override
   Widget build(BuildContext context) {
-
-    Color highlightColor = Color(int.parse(widget.highlightColor));
 
     return Dialog(
       backgroundColor: AppColors.backgroundColor,
@@ -105,17 +103,17 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
                 widget.highlightColor
               ),
             if (currentCreateWorkerStep == 1)
-              newMemberAvatar(selectAvatar, selectedAvatar, highlightColor),
+              newMemberAvatar(selectAvatar, selectedAvatar, widget.highlightColor),
             const SizedBox(height: 25),
             Center(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  currentCreateWorkerStep == 0 ? Icon(Icons.circle, size: 10, color: highlightColor) 
-                    : Icon(Icons.trip_origin, size: 10, color: highlightColor),
-                  currentCreateWorkerStep == 0 ? Icon(Icons.trip_origin, size: 10, color: highlightColor) 
-                    : Icon(Icons.circle, size: 10, color: highlightColor),
+                  currentCreateWorkerStep == 0 ? Icon(Icons.circle, size: 10, color: widget.highlightColor) 
+                    : Icon(Icons.trip_origin, size: 10, color: widget.highlightColor),
+                  currentCreateWorkerStep == 0 ? Icon(Icons.trip_origin, size: 10, color: widget.highlightColor) 
+                    : Icon(Icons.circle, size: 10, color: widget.highlightColor),
                 ],
               ),
             ),
@@ -128,7 +126,7 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
                 },
                 style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(highlightColor),
+                  backgroundColor: MaterialStateProperty.all(widget.highlightColor),
                   padding: MaterialStateProperty.all<EdgeInsets>(
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 12)
                   )
@@ -152,7 +150,7 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
 Widget newMemberDetails(
   TextEditingController firstNameController, 
   TextEditingController lastNameController, 
-  String highlightColor
+  Color highlightColor
   ) {
   return Column(
     children: [

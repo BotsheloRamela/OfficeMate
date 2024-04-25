@@ -3,7 +3,7 @@ import 'package:office_mate/utils/constants.dart';
 
 class DefaultTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String highlightColor;
+  final Color highlightColor;
   final String hintText;
 
   const DefaultTextField({
@@ -25,7 +25,7 @@ class DefaultTextField extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         border: Border.all(
-          color: Color(int.parse(highlightColor)).withOpacity(0.2),
+          color: highlightColor.withOpacity(0.2),
           width: 1,
         ),
       ),
