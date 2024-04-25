@@ -84,7 +84,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (widget.isEditing && currentDialogStep == 1)
+                if (currentDialogStep == 1)
                   GestureDetector(
                     onTap: goBack,
                     child: const Icon(
@@ -194,7 +194,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
     );
   }
 
-  Widget newMemberAvatar(
+  Widget newMemberAvatar (
     void Function(int) selectAvatar, 
     int selectedIndex,
     Color higlightColor

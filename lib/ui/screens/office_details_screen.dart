@@ -142,9 +142,17 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
           child: const Icon(Icons.add, color: Colors.white),
         ),
         appBar: AppBar(
-          title: const Text('Office'),
+          title: const Text(
+            'Office',
+            style: TextStyle(
+              color: AppColors.secondaryColor,
+              fontSize: AppConstants.mdFontSize,
+              fontWeight: FontWeight.bold
+            ),
+          ),
           centerTitle: true,
           backgroundColor: AppColors.backgroundColor,
+          // TODO: Add delete office icon button and functionality
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),

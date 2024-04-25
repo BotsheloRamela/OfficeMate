@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:office_mate/ui/screens/office_manager_screen.dart';
 import 'package:office_mate/ui/screens/office_details_screen.dart';
 import 'package:office_mate/ui/viewmodels/home_screen_viewmodel.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
@@ -26,16 +27,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        floatingActionButton: const FloatingActionButton(
-          onPressed: null, // TODO: Implement onPressed
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OfficeManagerScreen(),
+              ),
+            );
+          },
           backgroundColor: AppColors.primaryColor,
-          child: Icon(Icons.add, color: Colors.white),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),
