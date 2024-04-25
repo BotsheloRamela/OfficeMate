@@ -6,8 +6,8 @@ class WorkerMoreOptionsDialog extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String workerId;
-  final String avatarId;
-  final Function(String) displayEditDialog;
+  final int avatarId;
+  final Function(int) displayEditDialog;
 
   const WorkerMoreOptionsDialog({
     super.key, 

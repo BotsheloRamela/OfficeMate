@@ -2,7 +2,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:office_mate/data/models/office.dart';
 import 'package:office_mate/data/models/office_worker.dart';
 import 'package:office_mate/utils/logging.dart';
-import 'package:uuid/uuid.dart';
 
 class FirebaseService {
   final log = logger;
@@ -41,7 +40,7 @@ class FirebaseService {
             name: officeData['name'],
             location: officeData['location'],
             officeCapacity: officeData['office_capacity'] ?? 0,
-            officeColor: officeData['office_color'] ?? '',
+            officeColorId: officeData['color_id'] ?? '',
             officeId: officeData['office_id'],
             email: officeData['email'] ?? '',
             phone: officeData['phone'] ?? '',
@@ -211,10 +210,10 @@ class FirebaseService {
         'name': office.name,
         'location': office.location,
         'office_capacity': office.officeCapacity,
-        'office_color': office.officeColor,
+        'color_id': office.officeColorId,
         'email': office.email,
         'phone': office.phone,
-        'office_id': const Uuid().v4(),
+        'office_id': office.officeId,
       });
 
       log.i('Office created successfully: ${office.name}');
@@ -241,7 +240,7 @@ class FirebaseService {
               'name': updatedOffice.name,
               'location': updatedOffice.location,
               'office_capacity': updatedOffice.officeCapacity,
-              'office_color': updatedOffice.officeColor,
+              'color_id': updatedOffice.officeColorId,
               'email': updatedOffice.email,
               'phone': updatedOffice.phone,
               'office_id': updatedOffice.officeId,

@@ -15,7 +15,7 @@ class OfficeDetailsViewModel extends ChangeNotifier {
     String firstName, 
     String lastName, 
     String officeId, 
-    String avatarId
+    int avatarId
   ) async {
     try {
 
@@ -43,7 +43,7 @@ class OfficeDetailsViewModel extends ChangeNotifier {
     String firstName, 
     String lastName, 
     String officeId, 
-    String avatarId,
+    int avatarId,
     String workerId
   ) async {
     try {

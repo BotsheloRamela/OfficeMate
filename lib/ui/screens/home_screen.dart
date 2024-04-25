@@ -79,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     builder: (context) => OfficeDetailsScreen(
                                       office: office, 
                                       workerCount: officeWorkerCount
+                                      // TODO: Add delete office functionality
                                     ),
                                   ),
                                 );
@@ -90,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   occupantsCount: officeWorkerCount,
                                   officeCapacity: office.officeCapacity,
                                   location: office.location,
-                                  officeColor: office.officeColor,
+                                  officeColorId: office.officeColorId,
                                   email: office.email,
                                   phone: office.phone,
                                 ),

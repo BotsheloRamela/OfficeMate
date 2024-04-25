@@ -4,12 +4,14 @@ import 'package:office_mate/utils/custom_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math' as math;
 
+import 'package:office_mate/utils/office_colors.dart';
+
 class OfficeCard extends StatefulWidget {
   final String companyName;
   final int occupantsCount;
   final int officeCapacity;
   final String location;
-  final String officeColor;
+  final int officeColorId;
   final String email;
   final String phone;
 
@@ -19,7 +21,7 @@ class OfficeCard extends StatefulWidget {
     required this.occupantsCount, 
     required this.officeCapacity,
     required this.location, 
-    required this.officeColor, 
+    required this.officeColorId, 
     required this.email, 
     required this.phone
   });
@@ -40,7 +42,9 @@ class _OfficeCardState extends State<OfficeCard> {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Color(int.parse(widget.officeColor)).withOpacity(0.2), 
+            color: Color(int.parse(OfficeColors.getColors()[
+              widget.officeColorId - 1
+            ])).withOpacity(0.2), 
             width: 1
           ),
           borderRadius: BorderRadius.circular(10.0),
@@ -50,7 +54,9 @@ class _OfficeCardState extends State<OfficeCard> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(9.0),
               side: BorderSide(
-                color: Color(int.parse(widget.officeColor)).withOpacity(0.2),
+                color: Color(int.parse(OfficeColors.getColors()[
+                  widget.officeColorId - 1
+                ])).withOpacity(0.2),
                 width: 1,
                 style: BorderStyle.solid,
               ),
@@ -63,7 +69,12 @@ class _OfficeCardState extends State<OfficeCard> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             decoration: BoxDecoration(
               border: Border(
-                left: BorderSide(color: Color(int.parse(widget.officeColor)), width: 12),
+                left: BorderSide(
+                  color: Color(int.parse(OfficeColors.getColors()[
+                    widget.officeColorId - 1
+                  ])), 
+                  width: 12
+                ),
               ),
             ) ,
             child: Column(

@@ -7,6 +7,7 @@ import 'package:office_mate/ui/widgets/worker_dialog.dart';
 import 'package:office_mate/ui/widgets/worker_more_options_dialog.dart';
 import 'package:office_mate/utils/avatar_icons.dart';
 import 'package:office_mate/utils/constants.dart';
+import 'package:office_mate/utils/office_colors.dart';
 
 class OfficeDetailsScreen extends StatefulWidget {
   final Office office;
@@ -30,14 +31,16 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
 
-    Color highlightColor = Color(int.parse(widget.office.officeColor));
+    Color highlightColor = Color(int.parse(OfficeColors.getColors()[
+      widget.office.officeColorId- 1
+    ]));
 
     bool isEditing = false;
 
     OfficeDetailsViewModel viewModel = OfficeDetailsViewModel();
 
     /// Save the worker to the database
-    void saveWorker(String avatarId, String? workerId) {
+    void saveWorker(int avatarId, String? workerId) {
       if (!isEditing) {
         viewModel.createWorker(
           firstNameController.text,
@@ -63,7 +66,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
     void showWorkerDialog(
       String? firstName,
       String? lastName,
-      String? avatarId,
+      int? avatarId,
       String? workerId
     ) {
       showDialog(
@@ -73,7 +76,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             firstNameController: firstNameController..text = firstName ?? '',
             lastNameController: lastNameController..text = lastName ?? '',
             highlightColor: highlightColor,
-            saveWorker: (_) => saveWorker(_, workerId),
+            saveWorker: (int _) => saveWorker(_, workerId),
             isEditing: isEditing,
             avatarId: avatarId,
             workerId: workerId
@@ -87,7 +90,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       BuildContext context,
       String firstName,
       String lastName,
-      String avatarId,
+      int avatarId,
       String workerId
     ) {
       setState(() {
@@ -108,7 +111,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       String firstName, 
       String lastName, 
       String workerId, 
-      String avatarId
+      int avatarId
     ) {
       showDialog(
         context: context,
@@ -120,7 +123,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             workerId: workerId,
             avatarId: avatarId,
             displayEditDialog: (
-              String editedAvatarId
+              int editedAvatarId
             ) => openEditDialog(
               context, 
               firstName, 
@@ -163,7 +166,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                 occupantsCount: widget.workerCount,
                 officeCapacity: widget.office.officeCapacity,
                 location: widget.office.location,
-                officeColor: widget.office.officeColor,
+                officeColorId: widget.office.officeColorId,
                 email: widget.office.email,
                 phone: widget.office.phone,
               ),
@@ -207,7 +210,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                     ),
                     leading: CircleAvatar(
                       radius: 25,
-                      backgroundImage: AssetImage(AvatarIcons.getAvatarById(worker.avatarId)),
+                      backgroundImage: AssetImage(AvatarIcons.getAllAvatars()[worker.avatarId]),
                     ),
                     title: Text(
                       '${worker.name} ${worker.familyName}',
