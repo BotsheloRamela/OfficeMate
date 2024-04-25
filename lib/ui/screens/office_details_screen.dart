@@ -4,6 +4,7 @@ import 'package:office_mate/ui/viewmodels/office_details_viewmodel.dart';
 import 'package:office_mate/ui/widgets/create_worker_dialog.dart';
 import 'package:office_mate/ui/widgets/custom_search_bar.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
+import 'package:office_mate/ui/widgets/worker_more_options_dialog.dart';
 import 'package:office_mate/utils/avatar_icons.dart';
 import 'package:office_mate/utils/constants.dart';
 
@@ -52,6 +53,15 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             highlightColor: highlightColor,
             createWorker: createWorker,
           );
+        },
+      );
+    }
+
+    void showMoreOptionsDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return WorkerMoreOptionsDialog(highlightColor: highlightColor);
         },
       );
     }
@@ -132,9 +142,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                       )
                     ),
                     trailing: GestureDetector(
-                      onTap: () {
-                        // TODO: Implement delete & edit functionality
-                      },
+                      onTap: showMoreOptionsDialog,
                       child: const Icon(
                         Icons.more_vert,
                         color: AppColors.secondaryColor,
