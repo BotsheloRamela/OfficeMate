@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:office_mate/ui/screens/office_details_screen.dart';
 import 'package:office_mate/ui/viewmodels/home_screen_viewmodel.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
 import 'package:office_mate/utils/constants.dart';
@@ -13,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  int officeWorkerCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -22,10 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
         floatingActionButton: const FloatingActionButton(
           onPressed: null, // TODO: Implement onPressed
           backgroundColor: AppColors.primaryColor,
@@ -53,16 +59,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                         child: ListView.builder(
                           itemCount: viewModel.offices.length,
+                          physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final office = viewModel.offices[index];
-                            return OfficeCard(
-                              companyName: office.name,
-                              occupantsCount: office.occupantsCount,
-                              officeCapacity: office.officeCapacity,
-                              location: office.location,
-                              officeColor: office.officeColor,
-                              email: office.email,
-                              phone: office.phone,
+                            final officeWorkerCount = viewModel.officeWorkerCount[office.officeId] as int;
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigate to the office details screen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OfficeDetailsScreen(
+                                      office: office, 
+                                      workerCount: officeWorkerCount
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: OfficeCard(
+                                  companyName: office.name,
+                                  occupantsCount: officeWorkerCount,
+                                  officeCapacity: office.officeCapacity,
+                                  location: office.location,
+                                  officeColor: office.officeColor,
+                                  email: office.email,
+                                  phone: office.phone,
+                                ),
+                              ),
                             );
                           },
                         )

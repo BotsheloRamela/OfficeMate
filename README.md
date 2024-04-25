@@ -78,3 +78,6 @@ office_mate/
 ## Dependencies
 - **Flutter SDK**: https://flutter.dev/docs/get-started/install
 - **Firebase SDK**: https://firebase.google.com/docs/flutter/setup?platform=android
+
+## Credits
+- Avatar Images by <a href="https://www.freepik.com/free-psd/3d-illustration-person-with-sunglasses_27470360.htm">Freepik</a>

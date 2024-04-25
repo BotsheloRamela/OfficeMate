@@ -1,4 +1,3 @@
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:office_mate/data/models/office.dart';
 import 'package:office_mate/data/models/office_worker.dart';
@@ -31,21 +30,21 @@ class FirebaseService {
         // Iterate through each office entry
         final offices = <Office>[];
         for (var officeEntry in officeSnapshot.children) {
-          final officeId = officeEntry.key;
           final officeData = officeEntry.value as Map<dynamic, dynamic>;
+          final officeId = officeData['office_id'];
 
           // Get worker information for this office
-          final workerMap = await _getWorkersForOffice(officeId.toString());
+          final workerList = await _getWorkersForOffice(officeId.toString());
           
           final office = Office(
             name: officeData['name'],
             location: officeData['location'],
-            occupantsCount: officeData['occupants_count'] ?? 0, 
             officeCapacity: officeData['office_capacity'] ?? 0,
             officeColor: officeData['office_color'] ?? '',
+            officeId: officeData['office_id'],
             email: officeData['email'] ?? '',
             phone: officeData['phone'] ?? '',
-            workers: workerMap.values.toList(),
+            workers: workerList,
           );
 
           offices.add(office);
@@ -63,29 +62,137 @@ class FirebaseService {
   }
 
   /// Fetches worker information for a specific office
-  Future<Map<String, OfficeWorker>> _getWorkersForOffice(String officeId) async {
+  Future<List<OfficeWorker>> _getWorkersForOffice(String officeId) async {
     try {
-      final workerSnapshot = await _databaseOfficeWorkersRef.child(officeId).get();
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
 
       if (workerSnapshot.exists) {
-        final workers = <String, OfficeWorker>{};
+        final workers = <OfficeWorker>[];
 
         for (var workerEntry in workerSnapshot.children) {
           final workerMap = workerEntry.value as Map<dynamic, dynamic>;
-          final workerId = workerEntry.key;
-          workers[workerId.toString()] = OfficeWorker(
-            name: workerMap['name'],
-            familyName: workerMap['family_name'],
-          );
+          final workerOfficeId = workerMap['office_id'];
+          if (workerOfficeId == officeId) {
+            final worker = OfficeWorker(
+              name: workerMap['name'],
+              familyName: workerMap['family_name'],
+              officeId: workerMap['office_id'],
+              avatarId: workerMap['avatar_id'],
+              workerId: workerMap['worker_id'],
+            );
+            workers.add(worker);
+          }
         }
-
+        log.i('Fetched ${workers.length} workers for office $officeId');
         return workers;
       } else {
-        return {};
+        return [];
       }
     } catch (e) {
       log.e('Error fetching workers for office $officeId: $e');
       rethrow;
+    }
+  }
+
+  /// Method to create a new office worker and save it to Firebase
+  Future<bool> createWorker(OfficeWorker worker) async {
+    try {
+        await _databaseOfficeWorkersRef.push().set({
+          'name': worker.name,
+          'family_name': worker.familyName,
+          'office_id': worker.officeId,
+          'avatar_id': worker.avatarId,
+          'worker_id': worker.workerId,
+        });
+
+      log.i('Worker created successfully: ${worker.name}');
+      return true;
+    } catch (e) {
+      log.e('Error creating worker: $e');
+      return false;
+    }
+  }
+
+  /// Method to get the number of workers for an office based on officeId
+  Future<int> getWorkerCountForOffice(String officeId) async {
+    try {
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
+
+      if (workerSnapshot.exists) {
+        int workerCount = 0;
+
+        for (var workerEntry in workerSnapshot.children) {
+          final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+          final workerOfficeId = workerMap['office_id'];
+          if (workerOfficeId == officeId) {
+            workerCount++;
+          }
+        }
+        log.i('Fetched $workerCount workers for office $officeId');
+        return workerCount;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      log.e('Error fetching workers for office $officeId: $e');
+      rethrow;
+    }
+  }
+
+  /// Method to update an existing worker in Firebase
+  Future<bool> updateWorker(OfficeWorker worker) async {
+    try {
+      // Find the worker by workerId
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
+
+      if (workerSnapshot.exists) {
+
+        for (var workerEntry in workerSnapshot.children) {
+          final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+          final workerId = workerMap['worker_id'];
+          if (workerId == worker.workerId) {
+            // Update the worker
+            await workerEntry.ref.update({
+              'name': worker.name,
+              'family_name': worker.familyName,
+              'office_id': worker.officeId,
+              'avatar_id': worker.avatarId,
+              'worker_id': worker.workerId,
+            });
+          }
+        }
+
+        log.i('Worker updated successfully: ${worker.name}');
+        return true;
+      } else {
+        log.i('Worker with ID ${worker.workerId} not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error updating worker: $e');
+      return false;
+    }
+  }
+
+  /// Method to delete an existing office worker from Firebase
+  Future<bool> deleteWorker(String workerId) async {
+    try {
+      // Find the worker by workerId
+      final workerSnapshot = await _databaseOfficeWorkersRef.orderByChild('worker_id').equalTo(workerId).get();
+
+      if (workerSnapshot.exists) {
+        // Delete the worker
+        await workerSnapshot.ref.remove();
+
+        log.i('Worker with ID $workerId deleted successfully');
+        return true;
+      } else {
+        log.i('Worker with ID $workerId not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error deleting worker: $e');
+      return false;
     }
   }
 }
