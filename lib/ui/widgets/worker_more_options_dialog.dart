@@ -7,7 +7,7 @@ class WorkerMoreOptionsDialog extends StatefulWidget {
   final String lastName;
   final String workerId;
   final String avatarId;
-  final VoidCallback displayEditDialog;
+  final Function(String) displayEditDialog;
 
   const WorkerMoreOptionsDialog({
     super.key, 
@@ -59,7 +59,7 @@ class _WorkerMoreOptionsDialogState extends State<WorkerMoreOptionsDialog> {
       mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton(
-          onPressed: () => widget.displayEditDialog(),
+          onPressed: () => widget.displayEditDialog(widget.avatarId),
           style: ButtonStyle(
               elevation: MaterialStateProperty.all(0),
               backgroundColor: MaterialStateProperty.all(widget.highlightColor),

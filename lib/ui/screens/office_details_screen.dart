@@ -32,19 +32,34 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
 
     Color highlightColor = Color(int.parse(widget.office.officeColor));
 
-    bool displayEditDialog = false;
+    bool isEditing = false;
 
     OfficeDetailsViewModel viewModel = OfficeDetailsViewModel();
 
-    void saveWorker(String avatarId ) {
-      viewModel.createWorker(
-        firstNameController.text,
-        lastNameController.text,
-        widget.office.officeId, 
-        avatarId
-      );
+    /// Save the worker to the database
+    void saveWorker(String avatarId, String? workerId) {
+      if (!isEditing) {
+        viewModel.createWorker(
+          firstNameController.text,
+          lastNameController.text,
+          widget.office.officeId, 
+          avatarId
+        );
+      } else {
+        viewModel.updateWorker(
+          firstNameController.text,
+          lastNameController.text,
+          widget.office.officeId, 
+          avatarId,
+          workerId!
+        );
+        setState(() {
+          isEditing = false;
+        });
+      }
     }
 
+    /// Show the worker dialog
     void showWorkerDialog(
       String? firstName,
       String? lastName,
@@ -55,11 +70,11 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
         context: context,
         builder: (BuildContext context) {
           return WorkerDialog(
-            firstNameController: displayEditDialog ? TextEditingController(text: firstName) : firstNameController,
-            lastNameController: displayEditDialog ? TextEditingController(text: lastName) : lastNameController,
+            firstNameController: firstNameController..text = firstName ?? '',
+            lastNameController: lastNameController..text = lastName ?? '',
             highlightColor: highlightColor,
-            saveWorker: saveWorker,
-            isEditing: displayEditDialog,
+            saveWorker: (_) => saveWorker(_, workerId),
+            isEditing: isEditing,
             avatarId: avatarId,
             workerId: workerId
           );
@@ -67,6 +82,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       );
     }
 
+    /// Open the edit dialog
     void openEditDialog(
       BuildContext context,
       String firstName,
@@ -75,7 +91,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       String workerId
     ) {
       setState(() {
-        displayEditDialog = true;
+        isEditing = true;
       });
       Navigator.pop(context); // Close the more options dialog
 
@@ -87,6 +103,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       );
     }
 
+    /// Show the more options dialog
     void showMoreOptionsDialog(
       String firstName, 
       String lastName, 
@@ -102,11 +119,13 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             lastName: lastName,
             workerId: workerId,
             avatarId: avatarId,
-            displayEditDialog: () => openEditDialog(
+            displayEditDialog: (
+              String editedAvatarId
+            ) => openEditDialog(
               context, 
               firstName, 
               lastName,
-              avatarId,
+              editedAvatarId,
               workerId
             )
           );
