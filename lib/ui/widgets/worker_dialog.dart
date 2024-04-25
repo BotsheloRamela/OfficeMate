@@ -12,6 +12,8 @@ class WorkerDialog extends StatefulWidget {
   final Color highlightColor;
   final void Function(String) saveWorker;
   final bool isEditing;
+  final String? avatarId;
+  final String? workerId;
 
   const WorkerDialog({
     super.key, 
@@ -19,7 +21,9 @@ class WorkerDialog extends StatefulWidget {
     required this.lastNameController,
     required this.highlightColor,
     required this.saveWorker,
-    required this.isEditing
+    required this.isEditing,
+    this.avatarId,
+    this.workerId
   });
 
   @override
@@ -27,18 +31,18 @@ class WorkerDialog extends StatefulWidget {
 }
 
 class _WorkerDialogState extends State<WorkerDialog> {
-  int currentCreateWorkerStep = 0;
+  int currentDialogStep = 0;
   int selectedAvatar = 0;
 
   void nextStep() {
     setState(() {
-      currentCreateWorkerStep++;
+      currentDialogStep++;
     });
   }
 
   void goBack() {
     setState(() {
-      currentCreateWorkerStep--;
+      currentDialogStep--;
     });
   }
 
@@ -50,6 +54,10 @@ class _WorkerDialogState extends State<WorkerDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    selectedAvatar = widget.avatarId != null 
+      ? int.parse(widget.avatarId!) - 1  
+      : 0;
 
     return Dialog(
       backgroundColor: AppColors.backgroundColor,
@@ -70,7 +78,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (currentCreateWorkerStep == 1)
+                if (widget.isEditing && currentDialogStep == 1)
                   GestureDetector(
                     onTap: goBack,
                     child: const Icon(
@@ -79,9 +87,9 @@ class _WorkerDialogState extends State<WorkerDialog> {
                       size: AppConstants.defaultCustomIconSize,
                     )
                   ),
-                const Text(
-                  'New Staff Member',
-                  style: TextStyle(
+                Text(
+                  widget.isEditing ? 'Edit Staff Member' : 'New Staff Member',
+                  style: const TextStyle(
                     fontSize: AppConstants.mdFontSize,
                     fontWeight: FontWeight.bold,
                     color: AppColors.secondaryColor
@@ -100,13 +108,13 @@ class _WorkerDialogState extends State<WorkerDialog> {
               ],
             ),
             const SizedBox(height: 20),
-            if (currentCreateWorkerStep == 0)
+            if (currentDialogStep == 0)
               newMemberDetails(
                 widget.firstNameController,
                 widget.lastNameController,
                 widget.highlightColor
               ),
-            if (currentCreateWorkerStep == 1)
+            if (currentDialogStep == 1)
               newMemberAvatar(selectAvatar, selectedAvatar, widget.highlightColor),
             const SizedBox(height: 25),
             Center(
@@ -114,9 +122,9 @@ class _WorkerDialogState extends State<WorkerDialog> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  currentCreateWorkerStep == 0 ? Icon(Icons.circle, size: 10, color: widget.highlightColor) 
+                  currentDialogStep == 0 ? Icon(Icons.circle, size: 10, color: widget.highlightColor) 
                     : Icon(Icons.trip_origin, size: 10, color: widget.highlightColor),
-                  currentCreateWorkerStep == 0 ? Icon(Icons.trip_origin, size: 10, color: widget.highlightColor) 
+                  currentDialogStep == 0 ? Icon(Icons.trip_origin, size: 10, color: widget.highlightColor) 
                     : Icon(Icons.circle, size: 10, color: widget.highlightColor),
                 ],
               ),
@@ -126,7 +134,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
               child: ElevatedButton(
                 onPressed: () {
                   // Navigator.of(context).pop();
-                  currentCreateWorkerStep == 0 ? nextStep() 
+                  currentDialogStep == 0 ? nextStep() 
                     : {
                       widget.saveWorker(selectedAvatar.toString()),
                       Navigator.of(context).pop()
@@ -136,11 +144,13 @@ class _WorkerDialogState extends State<WorkerDialog> {
                   elevation: MaterialStateProperty.all(0),
                   backgroundColor: MaterialStateProperty.all(widget.highlightColor),
                   padding: MaterialStateProperty.all<EdgeInsets>(
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 12)
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 12)
                   )
                 ),
                 child: Text(
-                  currentCreateWorkerStep == 0 ? 'NEXT' : 'ADD STAFF MEMBER',
+                  (widget.isEditing && currentDialogStep == 1) ? 'UPDATE STAFF MEMBER' 
+                  : (currentDialogStep == 0 ? 'NEXT' 
+                  : 'ADD STAFF MEMBER'),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: AppConstants.xsFontSize
