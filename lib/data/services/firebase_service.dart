@@ -120,7 +120,7 @@ class FirebaseService {
 
       if (workerSnapshot.exists) {
         int workerCount = 0;
-        
+
         for (var workerEntry in workerSnapshot.children) {
           final workerMap = workerEntry.value as Map<dynamic, dynamic>;
           final workerOfficeId = workerMap['office_id'];
@@ -136,6 +136,54 @@ class FirebaseService {
     } catch (e) {
       log.e('Error fetching workers for office $officeId: $e');
       rethrow;
+    }
+  }
+
+  /// Method to update an existing worker in Firebase
+  Future<bool> updateWorker(OfficeWorker worker) async {
+    try {
+      // Find the worker by workerId
+      final workerSnapshot = await _databaseOfficeWorkersRef.orderByChild('worker_id').equalTo(worker.workerId).get();
+
+      if (workerSnapshot.exists) {
+        // Update the worker
+        await workerSnapshot.ref.update({
+          'name': worker.name,
+          'family_name': worker.familyName,
+          'avatar_id': worker.avatarId,
+        });
+
+        log.i('Worker updated successfully: ${worker.name}');
+        return true;
+      } else {
+        log.i('Worker with ID ${worker.workerId} not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error updating worker: $e');
+      return false;
+    }
+  }
+
+  /// Method to delete an existing office worker from Firebase
+  Future<bool> deleteWorker(String workerId) async {
+    try {
+      // Find the worker by workerId
+      final workerSnapshot = await _databaseOfficeWorkersRef.orderByChild('worker_id').equalTo(workerId).get();
+
+      if (workerSnapshot.exists) {
+        // Delete the worker
+        await workerSnapshot.ref.remove();
+
+        log.i('Worker with ID $workerId deleted successfully');
+        return true;
+      } else {
+        log.i('Worker with ID $workerId not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error deleting worker: $e');
+      return false;
     }
   }
 }
