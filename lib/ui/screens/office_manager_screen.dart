@@ -1,11 +1,20 @@
 
 import 'package:flutter/material.dart';
+import 'package:office_mate/data/models/office.dart';
+import 'package:office_mate/ui/viewmodels/office_manager_viewmodel.dart';
 import 'package:office_mate/ui/widgets/default_textfield.dart';
 import 'package:office_mate/utils/constants.dart';
 import 'package:office_mate/utils/office_colors.dart';
 
 class OfficeManagerScreen extends StatefulWidget {
-  const OfficeManagerScreen({super.key});
+  final bool isEditing;
+  final Office? office;
+
+  const OfficeManagerScreen({
+    super.key, 
+    this.isEditing = false,
+    this.office
+  });
 
   @override
   State<OfficeManagerScreen> createState() => _OfficeManagerScreenState();
@@ -26,17 +35,29 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
     });
   }
 
+   @override
+  void initState() {
+    super.initState();
+    if (widget.isEditing) {
+      setState(() {
+        selectedColorIndex = widget.office!.officeColorId - 1;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Color highlightColor = AppColors.primaryColor;
+
+    OfficeManagerViewModel viewModel = OfficeManagerViewModel();
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
-          title: const Text(
-            'New Office',
-            style: TextStyle(
+          title: Text(
+            widget.isEditing ? "Edit Office" : "Add Office",
+            style: const TextStyle(
               color: AppColors.secondaryColor,
               fontSize: AppConstants.mdFontSize,
               fontWeight: FontWeight.bold
@@ -68,42 +89,87 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                DefaultTextField(
                 controller: _officePhoneController, 
                 highlightColor: highlightColor, 
-                hintText: "Phone Number"
+                hintText: "Phone Number",
+                keyboardType: TextInputType.phone
               ),
               const SizedBox(height: 20),
               DefaultTextField(
                 controller: _officeEmailController, 
                 highlightColor: highlightColor, 
-                hintText: "Email Address"
+                hintText: "Email Address",
+                keyboardType: TextInputType.emailAddress
               ),
               const SizedBox(height: 20),
               DefaultTextField(
                 controller: _officeMaxCapacityController, 
                 highlightColor: highlightColor, 
-                hintText: "Maximum Capacity"
+                hintText: "Maximum Capacity",
+                keyboardType: TextInputType.number
               ),
               const SizedBox(height: 30),
               newOfficeColor(selectColor, selectedColorIndex),
               const SizedBox(height: 30),
               Center(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(0),
-                    backgroundColor: MaterialStateProperty.all(
-                      Color(int.parse(OfficeColors.getColors()[selectedColorIndex]))
+                child: Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        if (widget.isEditing) {
+                          viewModel.updateOffice(
+                            _officeNameController.text,
+                            _officeAddressController.text,
+                            int.parse(_officeMaxCapacityController.text),
+                            selectedColorIndex + 1,
+                            _officeEmailController.text,
+                            _officePhoneController.text,
+                            widget.office!.officeId
+                          );
+                          Navigator.pop(context);
+                        } else {
+                          viewModel.createOffice(
+                            _officeNameController.text,
+                            _officeAddressController.text,
+                            int.parse(_officeMaxCapacityController.text),
+                            selectedColorIndex + 1,
+                            _officeEmailController.text,
+                            _officePhoneController.text
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(int.parse(OfficeColors.getColors()[selectedColorIndex]))
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.symmetric(horizontal: 70, vertical: 13)
+                        )
+                      ),
+                      child: Text(
+                        widget.isEditing ? "UPDATE OFFICE" : "ADD OFFICE",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: AppConstants.xsFontSize,
+                        ),
+                      ),
                     ),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.symmetric(horizontal: 70, vertical: 13)
-                    )
-                  ),
-                  child: const Text(
-                    "ADD OFFICE",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: AppConstants.xsFontSize,
-                    ),
-                  ),
+                    const SizedBox(height: 20),
+                    if (widget.isEditing)
+                      TextButton(
+                        onPressed: () {
+                          viewModel.deleteOffice(widget.office!.officeId);
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          "DELETE OFFICE",
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: AppConstants.xsFontSize,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
