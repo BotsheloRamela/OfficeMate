@@ -10,12 +10,14 @@ class CreateWorkerDialog extends StatefulWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final Color highlightColor;
+  final void Function(String) createWorker;
 
   const CreateWorkerDialog({
     super.key, 
     required this.firstNameController,
     required this.lastNameController,
     required this.highlightColor,
+    required this.createWorker
   });
 
   @override
@@ -122,7 +124,11 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
               child: ElevatedButton(
                 onPressed: () {
                   // Navigator.of(context).pop();
-                  nextStep();
+                  currentCreateWorkerStep == 0 ? nextStep() 
+                    : {
+                      widget.createWorker(selectedAvatar.toString()),
+                      Navigator.of(context).pop()
+                    };
                 },
                 style: ButtonStyle(
                   elevation: MaterialStateProperty.all(0),

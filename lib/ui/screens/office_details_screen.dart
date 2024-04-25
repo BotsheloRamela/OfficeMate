@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:office_mate/data/models/office.dart';
+import 'package:office_mate/ui/viewmodels/office_details_viewmodel.dart';
 import 'package:office_mate/ui/widgets/create_worker_dialog.dart';
 import 'package:office_mate/ui/widgets/custom_search_bar.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
@@ -23,6 +24,20 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
   @override
   Widget build(BuildContext context) {
 
+    Color highlightColor = Color(int.parse(widget.office.officeColor));
+
+
+    OfficeDetailsViewModel viewModel = OfficeDetailsViewModel();
+
+    void createWorker(String avatarId ) {
+      viewModel.createWorker(
+        firstNameController.text,
+        lastNameController.text,
+        widget.office.officeId, 
+        avatarId
+      );
+    }
+
     void showCreateWorkerDialog() {
       showDialog(
         context: context,
@@ -30,7 +45,8 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
           return CreateWorkerDialog(
             firstNameController: firstNameController,
             lastNameController: lastNameController,
-            highlightColor: widget.office.officeColor,
+            highlightColor: highlightColor,
+            createWorker: createWorker,
           );
         },
       );
@@ -41,7 +57,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
         backgroundColor: AppColors.backgroundColor,
         floatingActionButton: FloatingActionButton(
           onPressed: showCreateWorkerDialog,
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: highlightColor,
           child: const Icon(Icons.add, color: Colors.white),
         ),
         appBar: AppBar(
@@ -65,7 +81,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
               const SizedBox(height: 30.0),
               CustomSearchBar(
                 controller: _searchBarController,
-                borderColor: widget.office.officeColor,
+                borderColor: highlightColor,
               ),
               const SizedBox(height: 30.0),
               Row(
@@ -94,13 +110,15 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                 physics: const BouncingScrollPhysics(),
                 children: widget.office.workers.map((worker) {
                   return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: ClipOval(
-                      child: Image.asset(
-                        AvatarIcons.getAvatarById(worker.avatarId),
-                        width: AppConstants.avatarSize,
-                        height: AppConstants.avatarSize,
-                      ),
+                    contentPadding: const EdgeInsets.only(
+                      left: 0,
+                      right: 0,
+                      top: 0,
+                      bottom: 10
+                    ),
+                    leading: CircleAvatar(
+                      radius: 25,
+                      backgroundImage: AssetImage(AvatarIcons.getAvatarById(worker.avatarId)),
                     ),
                     title: Text(
                       '${worker.name} ${worker.familyName}',
@@ -109,9 +127,14 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                         color: AppColors.secondaryColor,
                       )
                     ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      onPressed: () {} // TODO: Implement onPressed
+                    trailing: GestureDetector(
+                      onTap: () {
+                        // TODO: Implement delete & edit functionality
+                      },
+                      child: const Icon(
+                        Icons.more_vert,
+                        color: AppColors.secondaryColor,
+                      )
                     )
                   );
                 }).toList(),
