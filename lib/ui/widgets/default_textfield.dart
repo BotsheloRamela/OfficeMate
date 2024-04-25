@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:office_mate/utils/constants.dart';
-import 'package:office_mate/utils/custom_icons.dart';
 
-class CustomSearchBar extends StatelessWidget {
+class DefaultTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String borderColor;
-  const CustomSearchBar({super.key, required this.controller, required this.borderColor});
+  final String highlightColor;
+  final String hintText;
+
+  const DefaultTextField({
+    super.key,
+    required this.controller,
+    required this.highlightColor,
+    required this.hintText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,7 @@ class CustomSearchBar extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         border: Border.all(
-          color: Color(int.parse(borderColor)).withOpacity(0.2),
+          color: Color(int.parse(highlightColor)).withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -33,22 +38,18 @@ class CustomSearchBar extends StatelessWidget {
               controller: controller,
               keyboardType: TextInputType.text,
               cursorColor: AppColors.primaryColor,
-              decoration: const InputDecoration(
+              style: const TextStyle(fontSize: AppConstants.smFontSize),
+              decoration: InputDecoration(
                 contentPadding: EdgeInsets.zero,
                 fillColor: Colors.white,
-                labelText: 'Search',
-                labelStyle: TextStyle(
+                hintText: hintText,
+                hintStyle: const TextStyle(
                   color: AppColors.secondaryColor,
-                  fontSize: AppConstants.mdFontSize,
+                  fontSize: AppConstants.smFontSize,
                 ),
                 border: InputBorder.none
               )
             ),
-          ),
-          SvgPicture.asset(
-            CustomIcons.search,
-            colorFilter: const ColorFilter.mode(AppColors.secondaryColor, BlendMode.srcIn),
-            width: AppConstants.defaultCustomIconSize,
           ),
         ],
       ),
