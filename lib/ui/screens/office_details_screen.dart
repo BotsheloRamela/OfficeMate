@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:office_mate/data/models/office.dart';
 import 'package:office_mate/ui/widgets/custom_search_bar.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
+import 'package:office_mate/utils/avatar_icons.dart';
 import 'package:office_mate/utils/constants.dart';
 
 class OfficeDetailsScreen extends StatefulWidget {
@@ -44,8 +45,57 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                 email: widget.office.email,
                 phone: widget.office.phone,
               ),
+              const SizedBox(height: 30.0),
+              CustomSearchBar(controller: _searchBarController),
+              const SizedBox(height: 30.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Staff Members In Office',
+                    style: TextStyle(
+                      fontSize: AppConstants.xlFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.secondaryColor,
+                    ),
+                  ),
+                  Text(
+                    '${widget.office.occupantsCount}',
+                    style: const TextStyle(
+                      fontSize: AppConstants.mdFontSize,
+                      color: AppColors.secondaryColor,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 20.0),
-              CustomSearchBar(controller: _searchBarController)
+              ListView(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                children: widget.office.workers.map((worker) {
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: ClipOval(
+                      child: Image.asset(
+                        AvatarIcons.getAvatarById(worker.avatarId),
+                        width: AppConstants.avatarSize,
+                        height: AppConstants.avatarSize,
+                      ),
+                    ),
+                    title: Text(
+                      '${worker.name} ${worker.familyName}',
+                      style: const TextStyle(
+                        fontSize: AppConstants.mdFontSize,
+                        color: AppColors.secondaryColor,
+                      )
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {} // TODO: Implement onPressed
+                    )
+                  );
+                }).toList(),
+              )
             ],
           ),
         ),

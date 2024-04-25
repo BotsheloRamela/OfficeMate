@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Expanded(
                         child: ListView.builder(
                           itemCount: viewModel.offices.length,
+                          physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final office = viewModel.offices[index];
                             return GestureDetector(
@@ -67,14 +68,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               },
-                              child: OfficeCard(
-                                companyName: office.name,
-                                occupantsCount: office.occupantsCount,
-                                officeCapacity: office.officeCapacity,
-                                location: office.location,
-                                officeColor: office.officeColor,
-                                email: office.email,
-                                phone: office.phone,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: OfficeCard(
+                                  companyName: office.name,
+                                  occupantsCount: office.occupantsCount,
+                                  officeCapacity: office.officeCapacity,
+                                  location: office.location,
+                                  officeColor: office.officeColor,
+                                  email: office.email,
+                                  phone: office.phone,
+                                ),
                               ),
                             );
                           },
