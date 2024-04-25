@@ -32,9 +32,11 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
 
     Color highlightColor = Color(int.parse(widget.office.officeColor));
 
+    bool displayEditDialog = false;
+
     OfficeDetailsViewModel viewModel = OfficeDetailsViewModel();
 
-    void createWorker(String avatarId ) {
+    void saveWorker(String avatarId ) {
       viewModel.createWorker(
         firstNameController.text,
         lastNameController.text,
@@ -43,26 +45,71 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       );
     }
 
-    void showCreateWorkerDialog() {
+    void showWorkerDialog(
+      String? firstName,
+      String? lastName,
+      String? avatarId,
+      String? workerId
+    ) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return WorkerDialog(
-            firstNameController: firstNameController,
-            lastNameController: lastNameController,
+            firstNameController: displayEditDialog ? TextEditingController(text: firstName) : firstNameController,
+            lastNameController: displayEditDialog ? TextEditingController(text: lastName) : lastNameController,
             highlightColor: highlightColor,
-            saveWorker: createWorker,
-            isEditing: false
+            saveWorker: saveWorker,
+            isEditing: displayEditDialog,
+            avatarId: avatarId,
+            workerId: workerId
           );
         },
       );
     }
 
-    void showMoreOptionsDialog() {
+    void openEditDialog(
+      BuildContext context,
+      String firstName,
+      String lastName,
+      String avatarId,
+      String workerId
+    ) {
+      setState(() {
+        displayEditDialog = true;
+      });
+      Navigator.pop(context); // Close the more options dialog
+
+      showWorkerDialog(
+        firstName,
+        lastName,
+        avatarId,
+        workerId
+      );
+    }
+
+    void showMoreOptionsDialog(
+      String firstName, 
+      String lastName, 
+      String workerId, 
+      String avatarId
+    ) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return WorkerMoreOptionsDialog(highlightColor: highlightColor);
+          return WorkerMoreOptionsDialog(
+            highlightColor: highlightColor,
+            firstName: firstName,
+            lastName: lastName,
+            workerId: workerId,
+            avatarId: avatarId,
+            displayEditDialog: () => openEditDialog(
+              context, 
+              firstName, 
+              lastName,
+              avatarId,
+              workerId
+            )
+          );
         },
       );
     }
@@ -71,7 +118,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         floatingActionButton: FloatingActionButton(
-          onPressed: showCreateWorkerDialog,
+          onPressed: () => showWorkerDialog(null, null, null, null),
           backgroundColor: highlightColor,
           child: const Icon(Icons.add, color: Colors.white),
         ),
@@ -143,7 +190,12 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                       )
                     ),
                     trailing: GestureDetector(
-                      onTap: showMoreOptionsDialog,
+                      onTap: () => showMoreOptionsDialog(
+                        worker.name, 
+                        worker.familyName, 
+                        worker.workerId, 
+                        worker.avatarId
+                      ),
                       child: const Icon(
                         Icons.more_vert,
                         color: AppColors.secondaryColor,
