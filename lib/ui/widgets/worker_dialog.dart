@@ -6,25 +6,27 @@ import 'package:office_mate/utils/avatar_icons.dart';
 import 'package:office_mate/utils/constants.dart';
 import 'package:office_mate/utils/custom_icons.dart';
 
-class CreateWorkerDialog extends StatefulWidget {
+class WorkerDialog extends StatefulWidget {
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final Color highlightColor;
-  final void Function(String) createWorker;
+  final void Function(String) saveWorker;
+  final bool isEditing;
 
-  const CreateWorkerDialog({
+  const WorkerDialog({
     super.key, 
     required this.firstNameController,
     required this.lastNameController,
     required this.highlightColor,
-    required this.createWorker
+    required this.saveWorker,
+    required this.isEditing
   });
 
   @override
-  State<CreateWorkerDialog> createState() => _CreateWorkerDialogState();
+  State<WorkerDialog> createState() => _WorkerDialogState();
 }
 
-class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
+class _WorkerDialogState extends State<WorkerDialog> {
   int currentCreateWorkerStep = 0;
   int selectedAvatar = 0;
 
@@ -126,7 +128,7 @@ class _CreateWorkerDialogState extends State<CreateWorkerDialog> {
                   // Navigator.of(context).pop();
                   currentCreateWorkerStep == 0 ? nextStep() 
                     : {
-                      widget.createWorker(selectedAvatar.toString()),
+                      widget.saveWorker(selectedAvatar.toString()),
                       Navigator.of(context).pop()
                     };
                 },
