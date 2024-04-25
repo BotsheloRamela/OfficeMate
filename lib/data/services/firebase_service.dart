@@ -143,17 +143,24 @@ class FirebaseService {
   Future<bool> updateWorker(OfficeWorker worker) async {
     try {
       // Find the worker by workerId
-      final workerSnapshot = await _databaseOfficeWorkersRef.orderByChild('worker_id').equalTo(worker.workerId).get();
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
 
       if (workerSnapshot.exists) {
-        // Update the worker
-        await workerSnapshot.ref.update({
-          'name': worker.name,
-          'family_name': worker.familyName,
-          'avatar_id': worker.avatarId,
-          'worker_id': worker.workerId,
-          'office_id': worker.officeId,
-        });
+
+        for (var workerEntry in workerSnapshot.children) {
+          final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+          final workerOfficeId = workerMap['office_id'];
+          if (workerOfficeId == worker.officeId) {
+            // Update the worker
+            await workerEntry.ref.update({
+              'name': worker.name,
+              'family_name': worker.familyName,
+              'office_id': worker.officeId,
+              'avatar_id': worker.avatarId,
+              'worker_id': worker.workerId,
+            });
+          }
+        }
 
         log.i('Worker updated successfully: ${worker.name}');
         return true;
