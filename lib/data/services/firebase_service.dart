@@ -93,5 +93,23 @@ class FirebaseService {
       rethrow;
     }
   }
+
+  /// Method to create a new office worker and save it to Firebase
+  Future<bool> createWorker(OfficeWorker worker) async {
+    try {
+        await _databaseOfficeWorkersRef.push().set({
+          'name': worker.name,
+          'family_name': worker.familyName,
+          'office_id': worker.officeId,
+          'avatar_id': worker.avatarId,
+        });
+
+      log.i('Worker created successfully: ${worker.name}');
+      return true;
+    } catch (e) {
+      log.e('Error creating worker: $e');
+      return false;
+    }
+  }
 }
   
