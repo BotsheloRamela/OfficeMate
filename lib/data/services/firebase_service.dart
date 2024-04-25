@@ -79,6 +79,7 @@ class FirebaseService {
               familyName: workerMap['family_name'],
               officeId: workerMap['office_id'],
               avatarId: workerMap['avatar_id'],
+              workerId: workerMap['worker_id'],
             );
             workers.add(worker);
           }
@@ -102,6 +103,7 @@ class FirebaseService {
           'family_name': worker.familyName,
           'office_id': worker.officeId,
           'avatar_id': worker.avatarId,
+          'worker_id': worker.workerId,
         });
 
       log.i('Worker created successfully: ${worker.name}');

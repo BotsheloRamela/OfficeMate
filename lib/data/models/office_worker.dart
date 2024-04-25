@@ -8,12 +8,14 @@ class OfficeWorker {
   final String familyName;
   final String officeId;
   final String avatarId;
+  final String workerId;
 
   OfficeWorker({
     required this.name, 
     required this.familyName, 
     required this.officeId, 
-    required this.avatarId
+    required this.avatarId,
+    required this.workerId
   });
 
   factory OfficeWorker.fromJson(Map<String, dynamic> json) => _$OfficeWorkerFromJson(json);
