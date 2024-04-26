@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           final office = viewModel.offices[index];
-                          final officeWorkerCount = viewModel.officeWorkerCount[office.officeId] as int;
+                          final officeWorkerCount = viewModel.officeWorkerCount[office.officeId] ?? 0;
                           return GestureDetector(
                             onTap: () {
                               // Navigate to the office details screen

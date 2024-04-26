@@ -89,13 +89,17 @@ class OfficeManagerViewModel extends ChangeNotifier{
   Future<void> fetchOffices() async {
     try {
       _isLoading = true;
-      //notifyListeners();
 
       offices = await _firebaseService.getOffices();
 
-      // Iterate through the list of offices to get the worker count for each office
-      for (Office office in offices) {
-        officeWorkerCount[office.officeId] = await _getOfficeWorkerCount(office.officeId);
+      List<Office> officeCopy = List.from(offices);
+
+      // Get the worker count for each office
+      if (offices.isNotEmpty) {
+        // Get the worker count for each office
+        for (var office in officeCopy) {
+          officeWorkerCount[office.officeId] = await _getOfficeWorkerCount(office.officeId);
+        }
       }
 
       _isLoading = false;
