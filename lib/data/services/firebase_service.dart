@@ -266,22 +266,40 @@ class FirebaseService {
       // Find the office by officeId
       final officeSnapshot = await _databaseOfficeRef.get();
 
-      if (officeSnapshot.exists) {
-        // Delete the office
-        for (var officeEntry in officeSnapshot.children) {
-          final officeData = officeEntry.value as Map<dynamic, dynamic>;
-          final officeId = officeData['office_id'];
-          if (officeId == officeId) {
-            await officeEntry.ref.remove();
-          }
-        }
-
-        log.i('Office with ID $officeId deleted successfully');
-        return true;
-      } else {
+      if (!officeSnapshot.exists) {
         log.i('Office with ID $officeId not found');
         return false;
       }
+
+      // Delete the office
+      for (var officeEntry in officeSnapshot.children) {
+        final officeData = officeEntry.value as Map<dynamic, dynamic>;
+        final currentOfficeId = officeData['office_id'];
+
+        if (currentOfficeId == officeId) {
+          // Retrieve workers associated with this office
+          final officeWorkersSnapshot = await _databaseOfficeWorkersRef.get();
+
+          // Delete workers associated with this office
+          if (officeWorkersSnapshot.exists) {
+            for (var workerEntry in officeWorkersSnapshot.children) {
+              final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+              final workerOfficeId = workerMap['office_id'];
+              if (workerOfficeId == officeId) {
+                await workerEntry.ref.remove();
+              }
+            }
+          }
+
+          // Delete the office
+          await officeEntry.ref.remove();
+          log.i('Office with ID $officeId deleted successfully');
+          return true;
+        }
+      }
+
+      log.i('Office with ID $officeId not found');
+      return false;
     } catch (e) {
       log.e('Error deleting office: $e');
       return false;
