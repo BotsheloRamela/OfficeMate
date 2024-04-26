@@ -190,7 +190,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                 children: [
                   OfficeCard(
                     companyName: widget.office.name,
-                    occupantsCount: widget.workerCount,
+                    occupantsCount: officeDetailsViewModel.getWorkers().length,
                     officeCapacity: widget.office.officeCapacity,
                     location: widget.office.location,
                     officeColorId: widget.office.officeColorId,
@@ -227,7 +227,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                         ),
                       ),
                       Text(
-                        '${widget.workerCount}',
+                        '${officeDetailsViewModel.getWorkers().length}',
                         style: const TextStyle(
                           fontSize: AppConstants.mdFontSize,
                           color: AppColors.secondaryColor,
