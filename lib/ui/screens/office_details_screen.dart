@@ -96,6 +96,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       setState(() {
         isEditing = true;
       });
+
       Navigator.pop(context); // Close the more options dialog
 
       showWorkerDialog(
@@ -122,15 +123,19 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             lastName: lastName,
             workerId: workerId,
             avatarId: avatarId,
-            displayEditDialog: (
-              int editedAvatarId
-            ) => openEditDialog(
-              context, 
-              firstName, 
-              lastName,
-              editedAvatarId,
-              workerId
-            )
+            displayEditDialog: (int editedAvatarId) => openEditDialog(
+                context, 
+                firstName, 
+                lastName,
+                editedAvatarId,
+                workerId,
+              ),
+            deleteWorker: () {
+              context.read<OfficeDetailsViewModel>().deleteWorker(
+                widget.office.officeId,
+                workerId
+              );
+            }
           );
         },
       );

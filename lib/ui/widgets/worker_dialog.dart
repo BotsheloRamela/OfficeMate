@@ -57,7 +57,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
     super.initState();
     if (widget.isEditing) {
       setState(() {
-        selectedAvatar = widget.avatarId! - 1;
+        selectedAvatar = widget.avatarId!;
       });
     }
   }
@@ -143,7 +143,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
                     : {
                       widget.saveWorker(
                         // Pass the selected avatar id + 1 to match the index
-                        selectedAvatar + 1
+                        selectedAvatar
                       ),
                       Navigator.of(context).pop()
                     };

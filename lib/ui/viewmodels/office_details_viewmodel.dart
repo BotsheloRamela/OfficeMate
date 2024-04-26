@@ -90,4 +90,18 @@ class OfficeDetailsViewModel extends ChangeNotifier {
     }
   }
 
+  /// Method to delete a worker
+  Future<void> deleteWorker(String officeId, String workerId) async {
+    try {
+      int workerIndex = officeWorkers[officeId]!.indexWhere((element) => element.workerId == workerId);
+
+      await _firebaseService.deleteWorker(workerId)
+        .then((value) => officeWorkers[officeId]?.removeAt(workerIndex));
+
+      notifyListeners();
+    } catch (e) {
+      log.e('Error deleting worker: $e');
+      rethrow;
+    }
+  }
 }
