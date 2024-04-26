@@ -10,6 +10,27 @@ class OfficeDetailsViewModel extends ChangeNotifier {
 
   final FirebaseService _firebaseService = FirebaseService();
 
+  final Map<String, List<OfficeWorker>> officeWorkers = {};
+
+  /// Method to get workers for an office
+  List<OfficeWorker> getWorkersForOffice(String officeId) {
+    return officeWorkers[officeId] ?? [];
+  }
+
+  /// Method to fetch workers for an office
+  Future<void> fetchWorkers(String officeId) async {
+    try {
+      List<OfficeWorker> fetchedWorkers = 
+        await _firebaseService.getWorkersForOffice(officeId);
+      officeWorkers.remove(officeId); // delete the old list of workers for this office
+      officeWorkers[officeId] = fetchedWorkers;
+      notifyListeners();
+    } catch (e) {
+      log.e('Error fetching workers: $e');
+      rethrow;
+    }
+  }
+
   /// Method to create a new worker
   Future<void> createWorker(
     String firstName, 
@@ -27,11 +48,10 @@ class OfficeDetailsViewModel extends ChangeNotifier {
         workerId:  const Uuid().v4()
       );
 
-      bool success = await _firebaseService.createWorker(officeWorker);
+      await _firebaseService.createWorker(officeWorker)
+        .then((value) => officeWorkers[officeId]?.add(officeWorker));
 
-      if (!success) {
-        // TODO: Handle error
-      }
+      notifyListeners();
     } catch (e) {
       log.e('Error creating worker: $e');
       rethrow;
@@ -55,12 +75,16 @@ class OfficeDetailsViewModel extends ChangeNotifier {
         workerId: workerId
       );
 
-      bool success = await _firebaseService.updateWorker(officeWorker);
+      final workerIndex = officeWorkers[officeId]!
+        .indexWhere((element) => element.workerId == workerId);
 
-      if (!success) {
-        // TODO: Handle error
-      }
+      // Update the worker in Firebase and then update the worker in the list of workers for this office
+      await _firebaseService.updateWorker(officeWorker)
+      .then((value) => officeWorkers[officeId]![workerIndex] = officeWorker);
+
+      notifyListeners();
     } catch (e) {
+      notifyListeners();
       log.e('Error updating worker: $e');
       rethrow;
     }
