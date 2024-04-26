@@ -1,11 +1,9 @@
 
-import 'package:flutter/foundation.dart';
 import 'package:office_mate/data/models/office.dart';
 import 'package:office_mate/data/services/firebase_service.dart';
-import 'package:office_mate/utils/logging.dart';
+import 'package:office_mate/ui/viewmodels/office_manager_viewmodel.dart';
 
-class HomeScreenViewModel extends ChangeNotifier {
-  final log = logger;
+class HomeScreenViewModel extends OfficeManagerViewModel {
 
   final FirebaseService _firebaseService = FirebaseService();
 

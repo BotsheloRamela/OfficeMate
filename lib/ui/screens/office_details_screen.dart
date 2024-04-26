@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:office_mate/data/models/office.dart';
+import 'package:office_mate/ui/screens/office_manager_screen.dart';
 import 'package:office_mate/ui/viewmodels/office_details_viewmodel.dart';
 import 'package:office_mate/ui/widgets/custom_search_bar.dart';
 import 'package:office_mate/ui/widgets/office_card.dart';
@@ -155,7 +156,6 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
           ),
           centerTitle: true,
           backgroundColor: AppColors.backgroundColor,
-          // TODO: Add delete office icon button and functionality
         ),
         body: Padding(
           padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),
@@ -169,6 +169,18 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                 officeColorId: widget.office.officeColorId,
                 email: widget.office.email,
                 phone: widget.office.phone,
+                onEdit: () {
+                  // Navigate to the office manager screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OfficeManagerScreen(
+                        office: widget.office,
+                        isEditing: true,
+                      ),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 30.0),
               CustomSearchBar(

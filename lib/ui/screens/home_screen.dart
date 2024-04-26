@@ -26,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -79,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     builder: (context) => OfficeDetailsScreen(
                                       office: office, 
                                       workerCount: officeWorkerCount
-                                      // TODO: Add delete office functionality
                                     ),
                                   ),
                                 );
@@ -94,6 +92,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   officeColorId: office.officeColorId,
                                   email: office.email,
                                   phone: office.phone,
+                                  onEdit: () {
+                                    // Navigate to the office manager screen
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OfficeManagerScreen(
+                                          office: office,
+                                          isEditing: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             );

@@ -69,8 +69,12 @@ class OfficeManagerViewModel extends ChangeNotifier{
     }
   }
 
+  deleteOffice(String officeId) {
+    _deleteOffice(officeId);
+  }
+
   /// Method to delete an office
-  Future<void> deleteOffice(String officeId) async {
+  Future<void> _deleteOffice(String officeId) async {
     try {
       await _firebaseService.deleteOffice(officeId);
       notifyListeners();

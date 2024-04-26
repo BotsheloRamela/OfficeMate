@@ -41,6 +41,12 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
     if (widget.isEditing) {
       setState(() {
         selectedColorIndex = widget.office!.officeColorId - 1;
+        // Set the text controllers to the values of the office being edited
+        _officeNameController.text = widget.office!.name;
+        _officeAddressController.text = widget.office!.location;
+        _officeMaxCapacityController.text = widget.office!.officeCapacity.toString();
+        _officePhoneController.text = widget.office!.phone;
+        _officeEmailController.text = widget.office!.email;
       });
     }
   }
@@ -165,7 +171,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                           "DELETE OFFICE",
                           style: TextStyle(
                             color: AppColors.primaryColor,
-                            fontSize: AppConstants.xsFontSize,
+                            fontSize: AppConstants.mdFontSize,
                           ),
                         ),
                       ),
