@@ -56,7 +56,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
   @override
   Widget build(BuildContext context) {
     Color highlightColor = AppColors.primaryColor;
-    
+
 
     return SafeArea(
       child: Scaffold(
@@ -74,116 +74,120 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
           backgroundColor: AppColors.backgroundColor,
           elevation: 0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              DefaultTextField(
-                controller: _officeNameController, 
-                highlightColor: highlightColor, 
-                hintText: "Office Name"
-              ),
-              const SizedBox(height: 20),
-              DefaultTextField(
-                controller: _officeAddressController, 
-                highlightColor: highlightColor, 
-                hintText: "Physical Address"
-              ),
-              const SizedBox(height: 20),
-               DefaultTextField(
-                controller: _officePhoneController, 
-                highlightColor: highlightColor, 
-                hintText: "Phone Number",
-                keyboardType: TextInputType.phone
-              ),
-              const SizedBox(height: 20),
-              DefaultTextField(
-                controller: _officeEmailController, 
-                highlightColor: highlightColor, 
-                hintText: "Email Address",
-                keyboardType: TextInputType.emailAddress
-              ),
-              const SizedBox(height: 20),
-              DefaultTextField(
-                controller: _officeMaxCapacityController, 
-                highlightColor: highlightColor, 
-                hintText: "Maximum Capacity",
-                keyboardType: TextInputType.number
-              ),
-              const SizedBox(height: 30),
-              newOfficeColor(selectColor, selectedColorIndex),
-              const SizedBox(height: 30),
-              Center(
-                child: Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        if (widget.isEditing) {
-                          context.read<OfficeManagerViewModel>().updateOffice(
-                            _officeNameController.text,
-                            _officeAddressController.text,
-                            int.parse(_officeMaxCapacityController.text),
-                            selectedColorIndex + 1,
-                            _officeEmailController.text,
-                            _officePhoneController.text,
-                            widget.office!.officeId
-                          );
-                          Navigator.pop(context);
-                        } else {
-                           context.read<OfficeManagerViewModel>().createOffice(
-                            _officeNameController.text,
-                            _officeAddressController.text,
-                            int.parse(_officeMaxCapacityController.text),
-                            selectedColorIndex + 1,
-                            _officeEmailController.text,
-                            _officePhoneController.text
-                          );
-                          Navigator.pop(context);
-                        }
-                      },
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
-                        backgroundColor: MaterialStateProperty.all(
-                          Color(int.parse(OfficeColors.getColors()[selectedColorIndex]))
-                        ),
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.symmetric(horizontal: 70, vertical: 13)
-                        )
-                      ),
-                      child: Text(
-                        widget.isEditing ? "UPDATE OFFICE" : "ADD OFFICE",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: AppConstants.xsFontSize,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    if (widget.isEditing)
-                      TextButton(
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                DefaultTextField(
+                  controller: _officeNameController, 
+                  highlightColor: highlightColor, 
+                  hintText: "Office Name"
+                ),
+                const SizedBox(height: 20),
+                DefaultTextField(
+                  controller: _officeAddressController, 
+                  highlightColor: highlightColor, 
+                  hintText: "Physical Address"
+                ),
+                const SizedBox(height: 20),
+                 DefaultTextField(
+                  controller: _officePhoneController, 
+                  highlightColor: highlightColor, 
+                  hintText: "Phone Number",
+                  keyboardType: TextInputType.phone
+                ),
+                const SizedBox(height: 20),
+                DefaultTextField(
+                  controller: _officeEmailController, 
+                  highlightColor: highlightColor, 
+                  hintText: "Email Address",
+                  keyboardType: TextInputType.emailAddress
+                ),
+                const SizedBox(height: 20),
+                DefaultTextField(
+                  controller: _officeMaxCapacityController, 
+                  highlightColor: highlightColor, 
+                  hintText: "Maximum Capacity",
+                  keyboardType: TextInputType.number
+                ),
+                const SizedBox(height: 30),
+                newOfficeColor(selectColor, selectedColorIndex),
+                const SizedBox(height: 30),
+                Center(
+                  child: Column(
+                    children: [
+                      ElevatedButton(
                         onPressed: () {
-                          context.read<OfficeManagerViewModel>().deleteOffice(widget.office!.officeId);
-                          Navigator.pushReplacement(context, 
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen()
-                            )
-                          );
+                          if (widget.isEditing) {
+                            context.read<OfficeManagerViewModel>().updateOffice(
+                              _officeNameController.text,
+                              _officeAddressController.text,
+                              int.parse(_officeMaxCapacityController.text),
+                              selectedColorIndex + 1,
+                              _officeEmailController.text,
+                              _officePhoneController.text,
+                              widget.office!.officeId
+                            );
+                            Navigator.pop(context);
+                          } else {
+                             context.read<OfficeManagerViewModel>().createOffice(
+                              _officeNameController.text,
+                              _officeAddressController.text,
+                              int.parse(_officeMaxCapacityController.text),
+                              selectedColorIndex + 1,
+                              _officeEmailController.text,
+                              _officePhoneController.text
+                            );
+                            Navigator.pop(context);
+                          }
                         },
-                        child: const Text(
-                          "DELETE OFFICE",
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: AppConstants.mdFontSize,
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(0),
+                          backgroundColor: MaterialStateProperty.all(
+                            Color(int.parse(OfficeColors.getColors()[selectedColorIndex]))
+                          ),
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.symmetric(horizontal: 70, vertical: 13)
+                          )
+                        ),
+                        child: Text(
+                          widget.isEditing ? "UPDATE OFFICE" : "ADD OFFICE",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: AppConstants.xsFontSize,
                           ),
                         ),
                       ),
-                  ],
+                      const SizedBox(height: 20),
+                      if (widget.isEditing)
+                        TextButton(
+                          onPressed: () {
+                            context.read<OfficeManagerViewModel>().deleteOffice(widget.office!.officeId);
+                            Navigator.pushReplacement(context, 
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen()
+                              )
+                            );
+                          },
+                          child: const Text(
+                            "DELETE OFFICE",
+                            style: TextStyle(
+                              color: AppColors.primaryColor,
+                              fontSize: AppConstants.mdFontSize,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -209,34 +213,36 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
           ),
         ),
         const SizedBox(height: 20),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 10.0,
-          runSpacing: 20.0,
-          children: [
-            for (int index = 0; index < colors.length; index++)
-              GestureDetector(
-                onTap: () {
-                  selectColor(colors.indexOf(colors[index]));
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: selectedIndex == index
-                          ? AppColors.primaryColor
-                          : Colors.transparent, // No ring when not selected
-                      width: 3.0,
+        Center(
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10.0,
+            runSpacing: 20.0,
+            children: [
+              for (int index = 0; index < colors.length; index++)
+                GestureDetector(
+                  onTap: () {
+                    selectColor(colors.indexOf(colors[index]));
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(2.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: selectedIndex == index
+                            ? AppColors.primaryColor
+                            : Colors.transparent, // No ring when not selected
+                        width: 3.0,
+                      ),
                     ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Color(int.parse(colors[index])),
-                  ),
-                )
-              ),
-          ],
+                    child: CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Color(int.parse(colors[index])),
+                    ),
+                  )
+                ),
+            ],
+          ),
         ),
       ],
     );

@@ -159,96 +159,100 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
             centerTitle: true,
             backgroundColor: AppColors.backgroundColor,
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),
-            child: Column(
-              children: [
-                OfficeCard(
-                  companyName: widget.office.name,
-                  occupantsCount: widget.workerCount,
-                  officeCapacity: widget.office.officeCapacity,
-                  location: widget.office.location,
-                  officeColorId: widget.office.officeColorId,
-                  email: widget.office.email,
-                  phone: widget.office.phone,
-                  onEdit: () {
-                    // Navigate to the office manager screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OfficeManagerScreen(
-                          office: widget.office,
-                          isEditing: true,
+          body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.horizontalAppPadding),
+              child: Column(
+                children: [
+                  OfficeCard(
+                    companyName: widget.office.name,
+                    occupantsCount: widget.workerCount,
+                    officeCapacity: widget.office.officeCapacity,
+                    location: widget.office.location,
+                    officeColorId: widget.office.officeColorId,
+                    email: widget.office.email,
+                    phone: widget.office.phone,
+                    onEdit: () {
+                      // Navigate to the office manager screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OfficeManagerScreen(
+                            office: widget.office,
+                            isEditing: true,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 30.0),
+                  CustomSearchBar(
+                    controller: _searchBarController,
+                    borderColor: highlightColor,
+                  ),
+                  const SizedBox(height: 30.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Staff Members In Office',
+                        style: TextStyle(
+                          fontSize: AppConstants.xlFontSize,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.secondaryColor,
                         ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 30.0),
-                CustomSearchBar(
-                  controller: _searchBarController,
-                  borderColor: highlightColor,
-                ),
-                const SizedBox(height: 30.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Staff Members In Office',
-                      style: TextStyle(
-                        fontSize: AppConstants.xlFontSize,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.secondaryColor,
-                      ),
-                    ),
-                    Text(
-                      '${widget.workerCount}',
-                      style: const TextStyle(
-                        fontSize: AppConstants.mdFontSize,
-                        color: AppColors.secondaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                ListView(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  children: officeDetailsViewModel.getWorkersForOffice(widget.office.officeId).map((worker) {
-                    return ListTile(
-                      contentPadding: const EdgeInsets.only(
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 10
-                      ),
-                      leading: CircleAvatar(
-                        radius: 25,
-                        backgroundImage: AssetImage(AvatarIcons.getAllAvatars()[worker.avatarId]),
-                      ),
-                      title: Text(
-                        '${worker.name} ${worker.familyName}',
+                      Text(
+                        '${widget.workerCount}',
                         style: const TextStyle(
                           fontSize: AppConstants.mdFontSize,
                           color: AppColors.secondaryColor,
-                        )
-                      ),
-                      trailing: GestureDetector(
-                        onTap: () => showMoreOptionsDialog(
-                          worker.name, 
-                          worker.familyName, 
-                          worker.workerId, 
-                          worker.avatarId
                         ),
-                        child: const Icon(
-                          Icons.more_vert,
-                          color: AppColors.secondaryColor,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20.0),
+                  ListView(
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(),
+                    children: officeDetailsViewModel.getWorkersForOffice(widget.office.officeId).map((worker) {
+                      return ListTile(
+                        contentPadding: const EdgeInsets.only(
+                          left: 0,
+                          right: 0,
+                          top: 0,
+                          bottom: 10
+                        ),
+                        leading: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage(AvatarIcons.getAllAvatars()[worker.avatarId]),
+                        ),
+                        title: Text(
+                          '${worker.name} ${worker.familyName}',
+                          style: const TextStyle(
+                            fontSize: AppConstants.mdFontSize,
+                            color: AppColors.secondaryColor,
+                          )
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () => showMoreOptionsDialog(
+                            worker.name, 
+                            worker.familyName, 
+                            worker.workerId, 
+                            worker.avatarId
+                          ),
+                          child: const Icon(
+                            Icons.more_vert,
+                            color: AppColors.secondaryColor,
+                          )
                         )
-                      )
-                    );
-                  }).toList(),
-                )
-              ],
+                      );
+                    }).toList(),
+                  )
+                ],
+              ),
             ),
           ),
         ),
