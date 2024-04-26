@@ -34,7 +34,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
   Widget build(BuildContext context) {
 
     Color highlightColor = Color(int.parse(OfficeColors.getColors()[
-      widget.office.officeColorId- 1
+      widget.office.officeColorId - 1
     ]));
 
     // State variable to track if the user is editing a worker

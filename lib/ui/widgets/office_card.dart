@@ -37,59 +37,65 @@ class _OfficeCardState extends State<OfficeCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      surfaceTintColor: Colors.white54,
-      color: Colors.white,
-      elevation: 0,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(int.parse(OfficeColors.getColors()[
-              widget.officeColorId - 1
-            ])).withOpacity(0.2), 
-            width: 1
-          ),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: ClipPath(
-          clipper: ShapeBorderClipper(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(9.0),
-              side: BorderSide(
-                color: Color(int.parse(OfficeColors.getColors()[
-                  widget.officeColorId - 1
-                ])).withOpacity(0.2),
-                width: 1,
-                style: BorderStyle.solid,
-              ),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: isExpanded ? 300 : 160,
+      curve: Curves.easeInOut,
+      child: Card(
+        surfaceTintColor: Colors.white54,
+        color: Colors.white,
+        elevation: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Color(int.parse(OfficeColors.getColors()[
+                widget.officeColorId - 1
+              ])).withOpacity(0.2), 
+              width: 1
             ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Container(
-            width: double.infinity,
-            // height: 100,
-            // alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(
+          child: ClipPath(
+            clipper: ShapeBorderClipper(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9.0),
+                side: BorderSide(
                   color: Color(int.parse(OfficeColors.getColors()[
                     widget.officeColorId - 1
-                  ])), 
-                  width: 12
+                  ])).withOpacity(0.2),
+                  width: 1,
+                  style: BorderStyle.solid,
                 ),
               ),
-            ) ,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                officeCardMainContent(),
-                if (isExpanded) 
-                  officeCardExpandedContent(),
-              ],
+            ),
+            child: Container(
+              width: double.infinity,
+              // height: 100,
+              // alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(
+                    color: Color(int.parse(OfficeColors.getColors()[
+                      widget.officeColorId - 1
+                    ])), 
+                    width: 12
+                  ),
+                ),
+              ) ,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    officeCardMainContent(),
+                    if (isExpanded) 
+                      officeCardExpandedContent(),
+                  ],
+                ),
+              ),
             ),
           ),
-  
         ),
       ),
     );
