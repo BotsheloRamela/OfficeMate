@@ -1,10 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:office_mate/data/models/office.dart';
+import 'package:office_mate/ui/screens/home_screen.dart';
 import 'package:office_mate/ui/viewmodels/office_manager_viewmodel.dart';
 import 'package:office_mate/ui/widgets/default_textfield.dart';
 import 'package:office_mate/utils/constants.dart';
 import 'package:office_mate/utils/office_colors.dart';
+import 'package:provider/provider.dart';
 
 class OfficeManagerScreen extends StatefulWidget {
   final bool isEditing;
@@ -54,8 +56,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
   @override
   Widget build(BuildContext context) {
     Color highlightColor = AppColors.primaryColor;
-
-    OfficeManagerViewModel viewModel = OfficeManagerViewModel();
+    
 
     return SafeArea(
       child: Scaffold(
@@ -121,7 +122,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                     ElevatedButton(
                       onPressed: () {
                         if (widget.isEditing) {
-                          viewModel.updateOffice(
+                          context.read<OfficeManagerViewModel>().updateOffice(
                             _officeNameController.text,
                             _officeAddressController.text,
                             int.parse(_officeMaxCapacityController.text),
@@ -132,7 +133,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                           );
                           Navigator.pop(context);
                         } else {
-                          viewModel.createOffice(
+                           context.read<OfficeManagerViewModel>().createOffice(
                             _officeNameController.text,
                             _officeAddressController.text,
                             int.parse(_officeMaxCapacityController.text),
@@ -164,8 +165,12 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                     if (widget.isEditing)
                       TextButton(
                         onPressed: () {
-                          viewModel.deleteOffice(widget.office!.officeId);
-                          Navigator.pop(context);
+                          context.read<OfficeManagerViewModel>().deleteOffice(widget.office!.officeId);
+                          Navigator.pushReplacement(context, 
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen()
+                            )
+                          );
                         },
                         child: const Text(
                           "DELETE OFFICE",
