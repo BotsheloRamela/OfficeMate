@@ -11,6 +11,15 @@ class OfficeDetailsViewModel extends ChangeNotifier {
   final FirebaseService _firebaseService = FirebaseService();
 
   final Map<String, List<OfficeWorker>> officeWorkers = {};
+  List<OfficeWorker> _currentWorkers = [];
+
+  // Getter for the current workers list (used by ListView)
+  List<OfficeWorker> getWorkers() {
+    if (_currentWorkers.isEmpty) {
+      return officeWorkers.values.expand((element) => element).toList();
+    }
+    return _currentWorkers;
+  }
 
   /// Method to get workers for an office
   List<OfficeWorker> getWorkersForOffice(String officeId) {
@@ -104,4 +113,19 @@ class OfficeDetailsViewModel extends ChangeNotifier {
       rethrow;
     }
   }
+
+  // Search for a worker by name
+  List<OfficeWorker> searchWorkers(String officeId, String query) {
+    return officeWorkers[officeId]!
+      .where((element) => element.name.toLowerCase().contains(query.toLowerCase()))
+      .toList();
+  }
+
+  // Add the filtered workers to the internal list
+  void updateWorkers(List<OfficeWorker> filteredWorkers) {
+    _currentWorkers = filteredWorkers;
+    // Call notifyListeners() to trigger rebuild when data changes
+    notifyListeners();
+  }
+
 }

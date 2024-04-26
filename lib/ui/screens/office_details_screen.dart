@@ -37,6 +37,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
       widget.office.officeColorId- 1
     ]));
 
+    // State variable to track if the user is editing a worker
     bool isEditing = false;
 
     /// Save the worker to the database
@@ -140,7 +141,23 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
         },
       );
     }
+    
+    // Update the list view based on the search query
+    void updateListView(String searchQuery) {
+      final filteredWorkers = context.read<OfficeDetailsViewModel>().searchWorkers(
+        widget.office.officeId,
+        searchQuery
+      );
 
+      context.read<OfficeDetailsViewModel>().updateWorkers(filteredWorkers);
+    }
+
+    // Listen for changes in the search bar
+    _searchBarController.addListener(() {
+      updateListView(_searchBarController.text);
+    });
+
+    // Fetch the workers for the office when the screen loads
     context.read<OfficeDetailsViewModel>().fetchWorkers(widget.office.officeId);
 
     return SafeArea(
@@ -222,7 +239,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                   ListView(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
-                    children: officeDetailsViewModel.getWorkersForOffice(widget.office.officeId).map((worker) {
+                    children: officeDetailsViewModel.getWorkers().map((worker) {
                       return ListTile(
                         contentPadding: const EdgeInsets.only(
                           left: 0,
