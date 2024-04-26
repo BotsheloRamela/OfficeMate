@@ -14,6 +14,7 @@ class OfficeCard extends StatefulWidget {
   final int officeColorId;
   final String email;
   final String phone;
+  final VoidCallback onEdit;
 
   const OfficeCard({
     super.key, 
@@ -23,7 +24,8 @@ class OfficeCard extends StatefulWidget {
     required this.location, 
     required this.officeColorId, 
     required this.email, 
-    required this.phone
+    required this.phone,
+    required this.onEdit
   });
 
   @override
@@ -81,23 +83,9 @@ class _OfficeCardState extends State<OfficeCard> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                officeCardMainContent(
-                  widget.companyName, 
-                  widget.occupantsCount,
-                  isExpanded,
-                  () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
-                  }
-                ),
+                officeCardMainContent(),
                 if (isExpanded) 
-                  officeCardExpandedContent(
-                    widget.location, 
-                    widget.email, 
-                    widget.phone,
-                    widget.officeCapacity
-                  ),
+                  officeCardExpandedContent(),
               ],
             ),
           ),
@@ -106,183 +94,180 @@ class _OfficeCardState extends State<OfficeCard> {
       ),
     );
   }
-}
-
-Widget officeCardMainContent(
-  String companyName, 
-  int occupantsCount, 
-  bool isExpanded,
-  VoidCallback toggleExpansion
-  ) {
-  return Column(
-    children: [
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-          companyName,
-            style: const TextStyle(
-              fontSize: AppConstants.lgFontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.secondaryColor
-            ),
-          ),
-          const Spacer(),
-          IconButton(
-            icon: SvgPicture.asset(
-              CustomIcons.edit, 
-              width: AppConstants.defaultCustomIconSize,
-              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-            ),
-            onPressed: () {
-              // TODO: Implement edit functionality
-            },
-          )
-        ],
-      ),
-      Row(
-        children: [
-          SvgPicture.asset(CustomIcons.people, width: AppConstants.defaultCustomIconSize),
-          const SizedBox(width: 10),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: '$occupantsCount',
-                  style: const TextStyle(
-                    fontSize: AppConstants.smFontSize,
-                    fontWeight: FontWeight.bold, // Making the count bold
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-                const TextSpan(
-                  text: ' Staff Members in Office',
-                  style: TextStyle(
-                    fontSize: AppConstants.smFontSize,
-                    color: AppColors.secondaryColor,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-      const SizedBox(height: 10),
-      const Divider(
-        color: AppColors.secondaryColor,
-        height: 1,
-      ),
-      // const SizedBox(height: 5),
-      TextButton(
-        onPressed: () {
-          // Toggle the expansion state
-          toggleExpansion();
-        },
-        style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(Colors.transparent),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+  
+  Widget officeCardMainContent() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'More Info',
-              style: TextStyle(
-                fontSize: AppConstants.xsFontSize,
-                color: AppColors.secondaryColor,
+            Text(
+            widget.companyName,
+              style: const TextStyle(
+                fontSize: AppConstants.lgFontSize,
+                fontWeight: FontWeight.bold,
+                color: AppColors.secondaryColor
               ),
             ),
-            const SizedBox(width: 10),
-            Transform(
-              alignment: Alignment.center,
-              transform: isExpanded ? Matrix4.rotationX(math.pi) : Matrix4.rotationX(0),
-              child: SvgPicture.asset(
-                CustomIcons.chevron,
+            const Spacer(),
+            IconButton(
+              icon: SvgPicture.asset(
+                CustomIcons.edit, 
                 width: AppConstants.defaultCustomIconSize,
                 colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+              ),
+              onPressed: () {
+                // Navigate to the office manager screen
+                widget.onEdit();
+              },
+            )
+          ],
+        ),
+        Row(
+          children: [
+            SvgPicture.asset(CustomIcons.people, width: AppConstants.defaultCustomIconSize),
+            const SizedBox(width: 10),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '${widget.occupantsCount}',
+                    style: const TextStyle(
+                      fontSize: AppConstants.smFontSize,
+                      fontWeight: FontWeight.bold, // Making the count bold
+                      color: AppColors.secondaryColor,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: ' Staff Members in Office',
+                    style: TextStyle(
+                      fontSize: AppConstants.smFontSize,
+                      color: AppColors.secondaryColor,
+                    ),
+                  ),
+                ],
               ),
             )
           ],
         ),
-      ),
-    ],
-  );
+        const SizedBox(height: 10),
+        const Divider(
+          color: AppColors.secondaryColor,
+          height: 1,
+        ),
+        // const SizedBox(height: 5),
+        TextButton(
+          onPressed: () => setState(() {
+            isExpanded = !isExpanded;
+          }),
+          style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'More Info',
+                style: TextStyle(
+                  fontSize: AppConstants.xsFontSize,
+                  color: AppColors.secondaryColor,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Transform(
+                alignment: Alignment.center,
+                transform: isExpanded ? Matrix4.rotationX(math.pi) : Matrix4.rotationX(0),
+                child: SvgPicture.asset(
+                  CustomIcons.chevron,
+                  width: AppConstants.defaultCustomIconSize,
+                  colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget officeCardExpandedContent() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            SvgPicture.asset(
+              CustomIcons.phone, 
+              width: AppConstants.defaultCustomIconSize,
+              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              widget.phone,
+              style: const TextStyle(
+                fontSize: AppConstants.xsFontSize,
+                color: AppColors.secondaryColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            SvgPicture.asset(
+              CustomIcons.email, 
+              width: AppConstants.defaultCustomIconSize,
+              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              widget.email,
+              style: const TextStyle(
+                fontSize: AppConstants.xsFontSize,
+                color: AppColors.secondaryColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            SvgPicture.asset(
+              CustomIcons.filledPeople, 
+              width: AppConstants.defaultCustomIconSize,
+              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              "Office Capacity: ${widget.officeCapacity}",
+              style: const TextStyle(
+                fontSize: AppConstants.xsFontSize,
+                color: AppColors.secondaryColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            SvgPicture.asset(
+              CustomIcons.location, 
+              width: AppConstants.defaultCustomIconSize,
+              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              widget.location,
+              style: const TextStyle(
+                fontSize: AppConstants.xsFontSize,
+                color: AppColors.secondaryColor,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+      ],
+    );
+  }
+
 }
 
-Widget officeCardExpandedContent(String location, String email, String phone, int officeCapacity) {
-  return Column(
-    children: [
-      Row(
-        children: [
-          SvgPicture.asset(
-            CustomIcons.phone, 
-            width: AppConstants.defaultCustomIconSize,
-            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            phone,
-            style: const TextStyle(
-              fontSize: AppConstants.xsFontSize,
-              color: AppColors.secondaryColor,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 15),
-      Row(
-        children: [
-          SvgPicture.asset(
-            CustomIcons.email, 
-            width: AppConstants.defaultCustomIconSize,
-            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            email,
-            style: const TextStyle(
-              fontSize: AppConstants.xsFontSize,
-              color: AppColors.secondaryColor,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 15),
-      Row(
-        children: [
-          SvgPicture.asset(
-            CustomIcons.filledPeople, 
-            width: AppConstants.defaultCustomIconSize,
-            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            "Office Capacity: $officeCapacity",
-            style: const TextStyle(
-              fontSize: AppConstants.xsFontSize,
-              color: AppColors.secondaryColor,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 15),
-      Row(
-        children: [
-          SvgPicture.asset(
-            CustomIcons.location, 
-            width: AppConstants.defaultCustomIconSize,
-            colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            location,
-            style: const TextStyle(
-              fontSize: AppConstants.xsFontSize,
-              color: AppColors.secondaryColor,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 15),
-    ],
-  );
-}
