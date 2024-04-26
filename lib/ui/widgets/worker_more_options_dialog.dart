@@ -6,8 +6,9 @@ class WorkerMoreOptionsDialog extends StatefulWidget {
   final String firstName;
   final String lastName;
   final String workerId;
-  final String avatarId;
-  final Function(String) displayEditDialog;
+  final int avatarId;
+  final Function(int) displayEditDialog;
+  final Function() deleteWorker;
 
   const WorkerMoreOptionsDialog({
     super.key, 
@@ -16,7 +17,8 @@ class WorkerMoreOptionsDialog extends StatefulWidget {
     required this.lastName,
     required this.workerId,
     required this.avatarId,
-    required this.displayEditDialog
+    required this.displayEditDialog,
+    required this.deleteWorker
   });
 
   @override
@@ -107,7 +109,12 @@ class _WorkerMoreOptionsDialogState extends State<WorkerMoreOptionsDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Delete the worker
+                // widget.deleteWorker(widget.workerId);
+                Navigator.pop(context);
+                widget.deleteWorker();
+              },
               style: ButtonStyle(
                 elevation: MaterialStateProperty.all(0),
                 backgroundColor: MaterialStateProperty.all(widget.highlightColor),

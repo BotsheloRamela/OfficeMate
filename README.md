@@ -3,6 +3,38 @@
 ## Overview
 OfficeMate is a mobile application designed to help users manage office spaces, including creating and managing offices, viewing office details and occupants, and managing office workers. The app is built using the Flutter framework and Firebase as the backend database service.
 
+## Setup Instructions
+OfficeMate is built Flutter version **3.19.4** on channel stable and Dart version **3.3.2**, so those are the minimum requirements to ensure the project runs without any issues.
+
+To set up the OfficeMate project on your local machine, follow these steps:
+
+1. Install the Flutter SDK by following the instructions [here](https://flutter-ko.dev/get-started/install).
+2. Clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/BotsheloRamela/OfficeMate.git
+   ```
+3. Navigate to the project directory:
+    ```bash
+    cd office_mate
+    ```
+4. Install the necessary project dependencies by running:
+    ```bash
+    flutter pub get
+    ```
+5. Open the project in Android Studio, Visual Studio or Xcode.
+6. Set up your local environment variables for the required services (Firebase). Ensure you have the environment variables defined in `.env.dev`. You'll find a template `.env.template` file in the codebase to guide you on the variable names needed.
+7. Run/start the app with the desired environment using the following command:
+    ```bash
+    flutter run --dart-define-from-file=.env.dev
+    ```
+
+### Additional Development Steps
+During development, you may need to generate code using `build_runner`. To do this, run the following command in the project directory:
+```bash
+flutter pub run build_runner build
+```
+This command generates code for various purposes such as JSON serialization. Make sure to run it whenever you make changes to relevant files.
+
 ## Architecture
 The OfficeMate app follows the Model-View-ViewModel (MVVM) architectural pattern. MVVM separates the user interface from the business logic and data access layer, promoting modularity and testability.
 
@@ -30,11 +62,8 @@ office_mate/
 │   │   │   ├── office.dart
 │   │   │   ├── office_worker.dart
 │   │   │   └── ... (other data models)
-│   │   ├── repositories/
-│   │   │   ├── office_repository.dart
-│   │   │   ├── office_worker_repository.dart
-│   │   │   └── ... (other repositories)
-│   │   └── firebase_service.dart
+│   │   └── services/
+│   │       └── firebase_service.dart
 │   │
 │   ├── ui/
 │   │   ├── screens/
@@ -60,20 +89,6 @@ office_mate/
 │
 └── README.md
 ```
-
-## Usage
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/BotsheloRamela/OfficeMate.git
-   ```
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Run the app:
-    ```bash
-   flutter run
-   ```
 
 ## Dependencies
 - **Flutter SDK**: https://flutter.dev/docs/get-started/install

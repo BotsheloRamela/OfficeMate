@@ -24,27 +24,23 @@ class FirebaseService {
   /// Method to fetch offices from Firebase
   Future<List<Office>> getOffices() async {
     try {
-      final officeSnapshot  = await _databaseOfficeRef.get();
+      final officeSnapshot = await _databaseOfficeRef.get();
 
       if (officeSnapshot.exists) {
         // Iterate through each office entry
         final offices = <Office>[];
         for (var officeEntry in officeSnapshot.children) {
           final officeData = officeEntry.value as Map<dynamic, dynamic>;
-          final officeId = officeData['office_id'];
 
-          // Get worker information for this office
-          final workerList = await _getWorkersForOffice(officeId.toString());
-          
+
           final office = Office(
             name: officeData['name'],
             location: officeData['location'],
             officeCapacity: officeData['office_capacity'] ?? 0,
-            officeColor: officeData['office_color'] ?? '',
+            officeColorId: officeData['color_id'] ?? '',
             officeId: officeData['office_id'],
             email: officeData['email'] ?? '',
             phone: officeData['phone'] ?? '',
-            workers: workerList,
           );
 
           offices.add(office);
@@ -62,7 +58,7 @@ class FirebaseService {
   }
 
   /// Fetches worker information for a specific office
-  Future<List<OfficeWorker>> _getWorkersForOffice(String officeId) async {
+  Future<List<OfficeWorker>> getWorkersForOffice(String officeId) async {
     try {
       final workerSnapshot = await _databaseOfficeWorkersRef.get();
 
@@ -178,11 +174,17 @@ class FirebaseService {
   Future<bool> deleteWorker(String workerId) async {
     try {
       // Find the worker by workerId
-      final workerSnapshot = await _databaseOfficeWorkersRef.orderByChild('worker_id').equalTo(workerId).get();
+      final workerSnapshot = await _databaseOfficeWorkersRef.get();
 
       if (workerSnapshot.exists) {
         // Delete the worker
-        await workerSnapshot.ref.remove();
+        for (var workerEntry in workerSnapshot.children) {
+          final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+          final workerId = workerMap['worker_id'];
+          if (workerId == workerId) {
+            await workerEntry.ref.remove();
+          }
+        }
 
         log.i('Worker with ID $workerId deleted successfully');
         return true;
@@ -192,6 +194,110 @@ class FirebaseService {
       }
     } catch (e) {
       log.e('Error deleting worker: $e');
+      return false;
+    }
+  }
+
+  /// Method to create a new office and save it to Firebase
+  Future<bool> createOffice(Office office) async {
+    try {
+      // Set the office data with the generated ID
+      await _databaseOfficeRef.push().set({
+        'name': office.name,
+        'location': office.location,
+        'office_capacity': office.officeCapacity,
+        'color_id': office.officeColorId,
+        'email': office.email,
+        'phone': office.phone,
+        'office_id': office.officeId,
+      });
+
+      log.i('Office created successfully: ${office.name}');
+      return true;
+    } catch (e) {
+      log.e('Error creating office: $e');
+      return false;
+    }
+  }
+
+  /// Method to update an existing office in Firebase
+  Future<bool> updateOffice(Office updatedOffice) async {
+    try {
+      // Find the office by officeId
+      final officeSnapshot = await _databaseOfficeRef.get();
+
+      if (officeSnapshot.exists) {
+        // Update the office data
+        for (var officeEntry in officeSnapshot.children) {
+          final officeData = officeEntry.value as Map<dynamic, dynamic>;
+          final officeId = officeData['office_id'];
+          if (officeId == updatedOffice.officeId) {
+            await officeEntry.ref.update({
+              'name': updatedOffice.name,
+              'location': updatedOffice.location,
+              'office_capacity': updatedOffice.officeCapacity,
+              'color_id': updatedOffice.officeColorId,
+              'email': updatedOffice.email,
+              'phone': updatedOffice.phone,
+              'office_id': updatedOffice.officeId,
+            });
+          }
+        }
+
+        log.i('Office updated successfully: ${updatedOffice.name}');
+        return true;
+      } else {
+        log.i('Office with ID ${updatedOffice.officeId} not found');
+        return false;
+      }
+    } catch (e) {
+      log.e('Error updating office: $e');
+      return false;
+    }
+  }
+
+  /// Method to delete an existing office from Firebase
+  Future<bool> deleteOffice(String officeId) async {
+    try {
+      // Find the office by officeId
+      final officeSnapshot = await _databaseOfficeRef.get();
+
+      if (!officeSnapshot.exists) {
+        log.i('Office with ID $officeId not found');
+        return false;
+      }
+
+      // Delete the office
+      for (var officeEntry in officeSnapshot.children) {
+        final officeData = officeEntry.value as Map<dynamic, dynamic>;
+        final currentOfficeId = officeData['office_id'];
+
+        if (currentOfficeId == officeId) {
+          // Retrieve workers associated with this office
+          final officeWorkersSnapshot = await _databaseOfficeWorkersRef.get();
+
+          // Delete workers associated with this office
+          if (officeWorkersSnapshot.exists) {
+            for (var workerEntry in officeWorkersSnapshot.children) {
+              final workerMap = workerEntry.value as Map<dynamic, dynamic>;
+              final workerOfficeId = workerMap['office_id'];
+              if (workerOfficeId == officeId) {
+                await workerEntry.ref.remove();
+              }
+            }
+          }
+
+          // Delete the office
+          await officeEntry.ref.remove();
+          log.i('Office with ID $officeId deleted successfully');
+          return true;
+        }
+      }
+
+      log.i('Office with ID $officeId not found');
+      return false;
+    } catch (e) {
+      log.e('Error deleting office: $e');
       return false;
     }
   }

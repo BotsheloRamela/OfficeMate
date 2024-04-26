@@ -5,12 +5,14 @@ class DefaultTextField extends StatelessWidget {
   final TextEditingController controller;
   final Color highlightColor;
   final String hintText;
+  final TextInputType keyboardType;
 
   const DefaultTextField({
     super.key,
     required this.controller,
     required this.highlightColor,
     required this.hintText,
+    this.keyboardType = TextInputType.text,
   });
 
   @override

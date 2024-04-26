@@ -7,7 +7,7 @@ class OfficeWorker {
   final String name;
   final String familyName;
   final String officeId;
-  final String avatarId;
+  final int avatarId;
   final String workerId;
 
   OfficeWorker({
