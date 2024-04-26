@@ -3,7 +3,7 @@
 ## Overview
 OfficeMate is a mobile application designed to help users manage office spaces, including creating and managing offices, viewing office details and occupants, and managing office workers. The app is built using the Flutter framework and Firebase as the backend database service.
 
-# Cross-Platform Compatibility
+## Cross-Platform Compatibility
 OfficeMate is designed to be accessible across a wide range of devices and platforms. Whether you prefer to use your phone, tablet, or computer, you can access the application seamlessly.
 
 Here's a breakdown of supported platforms:
