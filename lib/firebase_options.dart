@@ -43,6 +43,7 @@ class DefaultFirebaseOptions {
     projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
     authDomain: String.fromEnvironment('FIREBASE_WEB_AUTH_DOMAIN'),
     storageBucket: String.fromEnvironment('FIREBASE_STORAGE_BUCKET'),
+    databaseURL: String.fromEnvironment('FIREBASE_DATABASE_URL'),
   );
 
   static const FirebaseOptions android = FirebaseOptions(
