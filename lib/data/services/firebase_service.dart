@@ -31,11 +31,8 @@ class FirebaseService {
         final offices = <Office>[];
         for (var officeEntry in officeSnapshot.children) {
           final officeData = officeEntry.value as Map<dynamic, dynamic>;
-          final officeId = officeData['office_id'];
 
-          // Get worker information for this office
-          final workerList = await _getWorkersForOffice(officeId.toString());
-          
+
           final office = Office(
             name: officeData['name'],
             location: officeData['location'],
@@ -44,7 +41,6 @@ class FirebaseService {
             officeId: officeData['office_id'],
             email: officeData['email'] ?? '',
             phone: officeData['phone'] ?? '',
-            workers: workerList,
           );
 
           offices.add(office);
@@ -62,7 +58,7 @@ class FirebaseService {
   }
 
   /// Fetches worker information for a specific office
-  Future<List<OfficeWorker>> _getWorkersForOffice(String officeId) async {
+  Future<List<OfficeWorker>> getWorkersForOffice(String officeId) async {
     try {
       final workerSnapshot = await _databaseOfficeWorkersRef.get();
 
