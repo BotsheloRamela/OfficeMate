@@ -5,6 +5,7 @@ import 'package:office_mate/firebase_options.dart';
 import 'package:office_mate/ui/screens/home_screen.dart';
 import 'package:office_mate/ui/viewmodels/office_details_viewmodel.dart';
 import 'package:office_mate/ui/viewmodels/office_manager_viewmodel.dart';
+import 'package:office_mate/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -41,11 +42,14 @@ Widget _buildRunnableApp({
     return app;
   }
 
-  return Center(
-    child: ClipRect(
-      child: SizedBox(
-        width: webAppWidth,
-        child: app,
+  return Container(
+    color: AppColors.backgroundColor,
+    child: Center(
+      child: ClipRect(
+        child: SizedBox(
+          width: webAppWidth,
+          child: app,
+        ),
       ),
     ),
   );
