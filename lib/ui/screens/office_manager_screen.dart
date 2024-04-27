@@ -57,7 +57,6 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
   Widget build(BuildContext context) {
     Color highlightColor = AppColors.primaryColor;
 
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
@@ -134,7 +133,12 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                               _officePhoneController.text,
                               widget.office!.officeId
                             );
-                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen()
+                              )
+                            );
                           } else {
                              context.read<OfficeManagerViewModel>().createOffice(
                               _officeNameController.text,

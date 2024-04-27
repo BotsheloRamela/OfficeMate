@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:office_mate/firebase_options.dart';
 import 'package:office_mate/ui/screens/home_screen.dart';
@@ -13,14 +14,40 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(
-    MultiProvider(
+  // Run the app on the web or on mobile devices with different configurations
+  final runnableApp = _buildRunnableApp(
+    isWeb: kIsWeb,
+    webAppWidth: kIsWeb ? 600.0 : double.infinity,
+    app: MultiProvider(
       providers: [
         ChangeNotifierProvider<OfficeDetailsViewModel>(create: (_) => OfficeDetailsViewModel()),
         ChangeNotifierProvider<OfficeManagerViewModel>(create: (_) => OfficeManagerViewModel()),
       ],
       child: const MainApp(),
-    )
+    ),
+  );
+
+  runApp(
+    runnableApp
+  );
+}
+
+Widget _buildRunnableApp({
+  required bool isWeb,
+  required double webAppWidth,
+  required Widget app,
+}) {
+  if (!isWeb) {
+    return app;
+  }
+
+  return Center(
+    child: ClipRect(
+      child: SizedBox(
+        width: webAppWidth,
+        child: app,
+      ),
+    ),
   );
 }
 

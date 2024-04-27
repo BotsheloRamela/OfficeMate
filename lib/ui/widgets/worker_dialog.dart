@@ -121,7 +121,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
                 widget.highlightColor
               ),
             if (currentDialogStep == 1)
-              newMemberAvatar(selectAvatar, selectedAvatar, widget.highlightColor),
+              Center(child: newMemberAvatar(selectAvatar, selectedAvatar, widget.highlightColor)),
             const SizedBox(height: 25),
             Center(
               child: Row(

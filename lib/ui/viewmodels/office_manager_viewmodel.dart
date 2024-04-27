@@ -20,7 +20,6 @@ class OfficeManagerViewModel extends ChangeNotifier{
   bool get isLoading => _isLoading;
   Map<String, int> get getOfficeWorkerCount => officeWorkerCount;
 
-
   /// Method to create an office
   Future<void> createOffice(
     String name,
