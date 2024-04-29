@@ -43,6 +43,23 @@ flutter pub run build_runner build
 ```
 This command generates code for various purposes such as JSON serialization. Make sure to run it whenever you make changes to relevant files.
 
+## App Screenshots
+<p>
+   <p>
+      <img src="appScreenshots/1.png" width="185" height="400" alt="Home"/> 
+      <img src="appScreenshots/2.png" width="185" height="400" alt="Add Office"/>
+      <img src="appScreenshots/8.png" width="185" height="400" alt="Edit Office"/>
+      <img src="appScreenshots/3.png" width="185" height="400" alt="Office Info"/>
+   </p>
+   <p>
+      <img src="appScreenshots/4.png" width="185" height="400" alt="Add Staff 1/2"/>
+      <img src="appScreenshots/5.png" width="185" height="400" alt="Add Staff 2/2"/>
+      <img src="appScreenshots/6.png" width="185" height="400" alt="Staff Options"/>
+      <img src="appScreenshots/7.png" width="185" height="400" alt="Delete Staff"/>
+   </p>
+</p>
+
+
 ## Architecture
 The OfficeMate app follows the Model-View-ViewModel (MVVM) architectural pattern. MVVM separates the user interface from the business logic and data access layer, promoting modularity and testability.
 
