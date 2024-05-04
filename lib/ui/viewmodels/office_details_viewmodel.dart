@@ -29,9 +29,9 @@ class OfficeDetailsViewModel extends ChangeNotifier {
   /// Method to fetch workers for an office
   Future<void> fetchWorkers(String officeId) async {
     try {
+      officeWorkers.remove(officeId); // delete the old list of workers for this office
       List<OfficeWorker> fetchedWorkers = 
         await _firebaseService.getWorkersForOffice(officeId);
-      officeWorkers.remove(officeId); // delete the old list of workers for this office
       officeWorkers[officeId] = fetchedWorkers;
       notifyListeners();
     } catch (e) {
@@ -117,7 +117,8 @@ class OfficeDetailsViewModel extends ChangeNotifier {
   // Search for a worker by name
   List<OfficeWorker> searchWorkers(String officeId, String query) {
     return officeWorkers[officeId]!
-      .where((element) => element.name.toLowerCase().contains(query.toLowerCase()))
+      .where((element) => element.name.toLowerCase().contains(query.toLowerCase()) 
+        || element.familyName.toLowerCase().contains(query.toLowerCase()))
       .toList();
   }
 
