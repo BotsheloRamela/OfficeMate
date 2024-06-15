@@ -76,10 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => OfficeDetailsScreen(
-                                    office: office, 
-                                    workerCount: officeWorkerCount
-                                  ),
+                                  builder: (context) => OfficeDetailsScreen(office: office),
                                 ),
                               );
                             },

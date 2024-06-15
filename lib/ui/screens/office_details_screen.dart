@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:office_mate/data/models/office.dart';
+import 'package:office_mate/data/models/office_worker.dart';
 import 'package:office_mate/ui/screens/office_manager_screen.dart';
 import 'package:office_mate/ui/viewmodels/office_details_viewmodel.dart';
 import 'package:office_mate/ui/widgets/custom_search_bar.dart';
@@ -13,11 +14,9 @@ import 'package:provider/provider.dart';
 
 class OfficeDetailsScreen extends StatefulWidget {
   final Office office;
-  final int workerCount;
   const OfficeDetailsScreen({
     super.key, 
-    required this.office,
-    required this.workerCount
+    required this.office
   });
 
   @override
@@ -32,9 +31,10 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Office office = widget.office;
 
     Color highlightColor = Color(int.parse(OfficeColors.getColors()[
-      widget.office.officeColorId - 1
+      office.officeColorId - 1
     ]));
 
     // State variable to track if the user is editing a worker
@@ -46,14 +46,14 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
         context.read<OfficeDetailsViewModel>().createWorker(
           firstNameController.text,
           lastNameController.text,
-          widget.office.officeId, 
+          office.officeId, 
           avatarId
         );
       } else {
         context.read<OfficeDetailsViewModel>().updateWorker(
           firstNameController.text,
           lastNameController.text,
-          widget.office.officeId, 
+          office.officeId, 
           avatarId,
           workerId!
         );
@@ -133,7 +133,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
               ),
             deleteWorker: () {
               context.read<OfficeDetailsViewModel>().deleteWorker(
-                widget.office.officeId,
+                office.officeId,
                 workerId
               );
             }
@@ -145,7 +145,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
     // Update the list view based on the search query
     void updateListView(String searchQuery) {
       final filteredWorkers = context.read<OfficeDetailsViewModel>().searchWorkers(
-        widget.office.officeId,
+        office.officeId,
         searchQuery
       );
 
@@ -158,30 +158,33 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
     });
 
     // Fetch the workers for the office when the screen loads
-    context.read<OfficeDetailsViewModel>().fetchWorkers(widget.office.officeId);
+    context.read<OfficeDetailsViewModel>().fetchWorkers(office.officeId);
 
     return SafeArea(
       child: Consumer<OfficeDetailsViewModel>(
-        builder: (context, officeDetailsViewModel, child) => Scaffold(
-          backgroundColor: AppColors.backgroundColor,
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => showWorkerDialog(null, null, null, null),
-            backgroundColor: highlightColor,
-            child: const Icon(Icons.add, color: Colors.white),
-          ),
-          appBar: AppBar(
-            title: const Text(
-              'Office',
-              style: TextStyle(
-                color: AppColors.secondaryColor,
-                fontSize: AppConstants.mdFontSize,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-            centerTitle: true,
+        builder: (context, officeDetailsViewModel, child) {
+          List<OfficeWorker> officeWorkers = officeDetailsViewModel.getWorkersForOffice(office.officeId);
+          
+          return Scaffold (
             backgroundColor: AppColors.backgroundColor,
-          ),
-          body: SingleChildScrollView(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => showWorkerDialog(null, null, null, null),
+              backgroundColor: highlightColor,
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
+            appBar: AppBar(
+              title: const Text(
+                'Office',
+                style: TextStyle(
+                  color: AppColors.secondaryColor,
+                  fontSize: AppConstants.mdFontSize,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              centerTitle: true,
+              backgroundColor: AppColors.backgroundColor,
+            ),
+            body: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: const BouncingScrollPhysics(),
             child: Padding(
@@ -189,20 +192,20 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
               child: Column(
                 children: [
                   OfficeCard(
-                    companyName: widget.office.name,
-                    occupantsCount: officeDetailsViewModel.getWorkers().length,
-                    officeCapacity: widget.office.officeCapacity,
-                    location: widget.office.location,
-                    officeColorId: widget.office.officeColorId,
-                    email: widget.office.email,
-                    phone: widget.office.phone,
+                    companyName: office.name,
+                    occupantsCount: officeWorkers.length,
+                    officeCapacity: office.officeCapacity,
+                    location: office.location,
+                    officeColorId: office.officeColorId,
+                    email: office.email,
+                    phone: office.phone,
                     onEdit: () {
                       // Navigate to the office manager screen
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => OfficeManagerScreen(
-                            office: widget.office,
+                            office: office,
                             isEditing: true,
                           ),
                         ),
@@ -227,7 +230,7 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                         ),
                       ),
                       Text(
-                        '${officeDetailsViewModel.getWorkers().length}',
+                        '${officeWorkers.length}',
                         style: const TextStyle(
                           fontSize: AppConstants.mdFontSize,
                           color: AppColors.secondaryColor,
@@ -239,14 +242,9 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
                   ListView(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
-                    children: officeDetailsViewModel.getWorkers().map((worker) {
+                    children: officeWorkers.map((worker) {
                       return ListTile(
-                        contentPadding: const EdgeInsets.only(
-                          left: 0,
-                          right: 0,
-                          top: 0,
-                          bottom: 10
-                        ),
+                        contentPadding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 10),
                         leading: CircleAvatar(
                           radius: 25,
                           backgroundImage: AssetImage(AvatarIcons.getAllAvatars()[worker.avatarId]),
@@ -277,7 +275,8 @@ class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
               ),
             ),
           ),
-        ),
+          );
+        }
       ),
     );
   }
