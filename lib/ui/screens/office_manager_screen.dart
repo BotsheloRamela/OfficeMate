@@ -23,13 +23,41 @@ class OfficeManagerScreen extends StatefulWidget {
 }
 
 class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
-  final _officeNameController = TextEditingController();
-  final _officeAddressController = TextEditingController();
-  final _officeMaxCapacityController = TextEditingController();
-  final _officePhoneController = TextEditingController();
-  final _officeEmailController = TextEditingController();
-
+  late bool isEditing;
+  late Office office;
   int selectedColorIndex = 0;
+
+  late final TextEditingController _officeNameController;
+  late final TextEditingController _officeAddressController;
+  late final TextEditingController _officeMaxCapacityController;
+  late final TextEditingController _officePhoneController;
+  late final TextEditingController _officeEmailController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    isEditing = widget.isEditing;
+
+    _officeNameController = TextEditingController();
+    _officeAddressController = TextEditingController();
+    _officeMaxCapacityController = TextEditingController();
+    _officePhoneController = TextEditingController();
+    _officeEmailController = TextEditingController();
+
+    if (isEditing) {
+      office = widget.office!;
+      setState(() {
+        selectedColorIndex = office.officeColorId - 1;
+        // Set the text controllers to the values of the office being edited
+        _officeNameController.text = office.name;
+        _officeAddressController.text = office.location;
+        _officeMaxCapacityController.text = office.officeCapacity.toString();
+        _officePhoneController.text = office.phone;
+        _officeEmailController.text = office.email;
+      });
+    }
+  }
 
   void selectColor(int index) {
     setState(() {
@@ -37,32 +65,18 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
     });
   }
 
-   @override
-  void initState() {
-    super.initState();
-    if (widget.isEditing) {
-      setState(() {
-        selectedColorIndex = widget.office!.officeColorId - 1;
-        // Set the text controllers to the values of the office being edited
-        _officeNameController.text = widget.office!.name;
-        _officeAddressController.text = widget.office!.location;
-        _officeMaxCapacityController.text = widget.office!.officeCapacity.toString();
-        _officePhoneController.text = widget.office!.phone;
-        _officeEmailController.text = widget.office!.email;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Color highlightColor = AppColors.primaryColor;
+
+    OfficeManagerViewModel viewModel = Provider.of<OfficeManagerViewModel>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
           title: Text(
-            widget.isEditing ? "Edit Office" : "Add Office",
+            isEditing ? "Edit Office" : "Add Office",
             style: const TextStyle(
               color: AppColors.secondaryColor,
               fontSize: AppConstants.mdFontSize,
@@ -123,8 +137,8 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          if (widget.isEditing) {
-                            context.read<OfficeManagerViewModel>().updateOffice(
+                          if (isEditing) {
+                            viewModel.updateOffice(
                               _officeNameController.text,
                               _officeAddressController.text,
                               int.parse(_officeMaxCapacityController.text),
@@ -140,7 +154,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                               )
                             );
                           } else {
-                             context.read<OfficeManagerViewModel>().createOffice(
+                             viewModel.createOffice(
                               _officeNameController.text,
                               _officeAddressController.text,
                               int.parse(_officeMaxCapacityController.text),
@@ -152,16 +166,16 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                           }
                         },
                         style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(0),
-                          backgroundColor: MaterialStateProperty.all(
+                          elevation: WidgetStateProperty.all(0),
+                          backgroundColor: WidgetStateProperty.all(
                             Color(int.parse(OfficeColors.getColors()[selectedColorIndex]))
                           ),
-                          padding: MaterialStateProperty.all<EdgeInsets>(
+                          padding: WidgetStateProperty.all<EdgeInsets>(
                             const EdgeInsets.symmetric(horizontal: 70, vertical: 13)
                           )
                         ),
                         child: Text(
-                          widget.isEditing ? "UPDATE OFFICE" : "ADD OFFICE",
+                          isEditing ? "UPDATE OFFICE" : "ADD OFFICE",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: AppConstants.xsFontSize,
@@ -169,10 +183,10 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      if (widget.isEditing)
+                      if (isEditing)
                         TextButton(
                           onPressed: () {
-                            context.read<OfficeManagerViewModel>().deleteOffice(widget.office!.officeId);
+                            viewModel.deleteOffice(widget.office!.officeId);
                             Navigator.pushReplacement(context, 
                               MaterialPageRoute(
                                 builder: (context) => const HomeScreen()
@@ -233,9 +247,7 @@ class _OfficeManagerScreenState extends State<OfficeManagerScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: selectedIndex == index
-                            ? AppColors.primaryColor
-                            : Colors.transparent, // No ring when not selected
+                        color: selectedIndex == index ? AppColors.primaryColor : Colors.transparent, // No ring when not selected
                         width: 3.0,
                       ),
                     ),
