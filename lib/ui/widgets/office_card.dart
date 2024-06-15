@@ -167,7 +167,7 @@ class _OfficeCardState extends State<OfficeCard> {
             isExpanded = !isExpanded;
           }),
           style: ButtonStyle(
-            overlayColor: MaterialStateProperty.all(Colors.transparent),
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

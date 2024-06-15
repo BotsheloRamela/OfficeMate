@@ -149,9 +149,9 @@ class _WorkerDialogState extends State<WorkerDialog> {
                     };
                 },
                 style: ButtonStyle(
-                  elevation: MaterialStateProperty.all(0),
-                  backgroundColor: MaterialStateProperty.all(widget.highlightColor),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
+                  elevation: WidgetStateProperty.all(0),
+                  backgroundColor: WidgetStateProperty.all(widget.highlightColor),
+                  padding: WidgetStateProperty.all<EdgeInsets>(
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 12)
                   )
                 ),

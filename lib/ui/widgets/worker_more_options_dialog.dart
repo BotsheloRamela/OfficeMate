@@ -63,9 +63,9 @@ class _WorkerMoreOptionsDialogState extends State<WorkerMoreOptionsDialog> {
         ElevatedButton(
           onPressed: () => widget.displayEditDialog(widget.avatarId),
           style: ButtonStyle(
-              elevation: MaterialStateProperty.all(0),
-              backgroundColor: MaterialStateProperty.all(widget.highlightColor),
-              padding: MaterialStateProperty.all<EdgeInsets>(
+              elevation: WidgetStateProperty.all(0),
+              backgroundColor: WidgetStateProperty.all(widget.highlightColor),
+              padding: WidgetStateProperty.all<EdgeInsets>(
                 const EdgeInsets.symmetric(horizontal: 50, vertical: 12)
               )
             ),
@@ -116,9 +116,9 @@ class _WorkerMoreOptionsDialogState extends State<WorkerMoreOptionsDialog> {
                 widget.deleteWorker();
               },
               style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(widget.highlightColor),
-                padding: MaterialStateProperty.all<EdgeInsets>(
+                elevation: WidgetStateProperty.all(0),
+                backgroundColor: WidgetStateProperty.all(widget.highlightColor),
+                padding: WidgetStateProperty.all<EdgeInsets>(
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
                 )
               ),
@@ -135,9 +135,9 @@ class _WorkerMoreOptionsDialogState extends State<WorkerMoreOptionsDialog> {
                 });
               },
               style: ButtonStyle(
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(Colors.grey),
-                padding: MaterialStateProperty.all<EdgeInsets>(
+                elevation: WidgetStateProperty.all(0),
+                backgroundColor: WidgetStateProperty.all(Colors.grey),
+                padding: WidgetStateProperty.all<EdgeInsets>(
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
                 )
               ),
