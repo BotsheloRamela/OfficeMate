@@ -18,10 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int officeWorkerCount = 0;
 
   @override
-  Widget build(BuildContext context) {
-
+  void initState() {
+    super.initState();
     context.read<OfficeManagerViewModel>().fetchOffices();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Consumer<OfficeManagerViewModel>(
       builder: (context, viewModel, child) => SafeArea(
         child: Scaffold(
