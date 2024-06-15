@@ -33,6 +33,7 @@ class WorkerDialog extends StatefulWidget {
 class _WorkerDialogState extends State<WorkerDialog> {
   int currentDialogStep = 0;
   int selectedAvatar = 0;
+  late List<String> avatars;
 
   void nextStep() {
     setState(() {
@@ -55,6 +56,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
   @override
   void initState() {
     super.initState();
+    avatars = AvatarIcons.getAllAvatars();
     if (widget.isEditing) {
       setState(() {
         selectedAvatar = widget.avatarId!;
@@ -194,12 +196,7 @@ class _WorkerDialogState extends State<WorkerDialog> {
     );
   }
 
-  Widget newMemberAvatar (
-    void Function(int) selectAvatar, 
-    int selectedIndex,
-    Color higlightColor
-    ){
-    List<String> avatars = AvatarIcons.getAllAvatars();
+  Widget newMemberAvatar(void Function(int) selectAvatar, int selectedIndex, Color higlightColor) {
     
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
