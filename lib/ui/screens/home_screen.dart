@@ -56,7 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 20.0),
                     Expanded(
-                      child: ListView.builder(
+                      child: viewModel.offices.isEmpty ?
+                        const Center(child: Text(
+                          "No offices available",
+                          style: TextStyle(
+                            fontSize: AppConstants.lgFontSize,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )) 
+                        : ListView.builder(
                         itemCount: viewModel.offices.length,
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
