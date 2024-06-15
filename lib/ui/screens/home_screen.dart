@@ -29,6 +29,16 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, viewModel, child) => SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.backgroundColor,
+          appBar: AppBar(
+            title: const Text(
+              'All Offices',
+              style: TextStyle(
+                fontSize: AppConstants.xlFontSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.push(
@@ -49,15 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(height: 40.0),
-                    const Text(
-                      'All Offices',
-                      style: TextStyle(
-                        fontSize: AppConstants.xlFontSize,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
                     Expanded(
                       child: viewModel.offices.isEmpty ?
                         const Center(child: Text(
