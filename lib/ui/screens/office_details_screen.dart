@@ -25,140 +25,142 @@ class OfficeDetailsScreen extends StatefulWidget {
 
 class _OfficeDetailsScreenState extends State<OfficeDetailsScreen> {
 
-  final _searchBarController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
+  late final TextEditingController _searchBarController;
+  late final TextEditingController firstNameController;
+  late final TextEditingController lastNameController;
+
+  late Office office;
+  late Color highlightColor;
+
+  // State variable to track if the user is editing a worker
+  bool isEditing = false;
 
   @override
-  Widget build(BuildContext context) {
-    Office office = widget.office;
+  void initState() {
+    super.initState();
+    _searchBarController = TextEditingController();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
 
-    Color highlightColor = Color(int.parse(OfficeColors.getColors()[
+    office = widget.office;
+    highlightColor = Color(int.parse(OfficeColors.getColors()[
       office.officeColorId - 1
     ]));
 
-    // State variable to track if the user is editing a worker
-    bool isEditing = false;
-
-    /// Save the worker to the database
-    void saveWorker(int avatarId, String? workerId) {
-      if (!isEditing) {
-        context.read<OfficeDetailsViewModel>().createWorker(
-          firstNameController.text,
-          lastNameController.text,
-          office.officeId, 
-          avatarId
-        );
-      } else {
-        context.read<OfficeDetailsViewModel>().updateWorker(
-          firstNameController.text,
-          lastNameController.text,
-          office.officeId, 
-          avatarId,
-          workerId!
-        );
-        setState(() {
-          isEditing = false;
-        });
-      }
-    }
-
-    /// Show the worker dialog
-    void showWorkerDialog(
-      String? firstName,
-      String? lastName,
-      int? avatarId,
-      String? workerId
-    ) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return WorkerDialog(
-            firstNameController: firstNameController..text = firstName ?? '',
-            lastNameController: lastNameController..text = lastName ?? '',
-            highlightColor: highlightColor,
-            saveWorker: (int _) => saveWorker(_, workerId),
-            isEditing: isEditing,
-            avatarId: avatarId,
-            workerId: workerId
-          );
-        },
-      );
-    }
-
-    /// Open the edit dialog
-    void openEditDialog(
-      BuildContext context,
-      String firstName,
-      String lastName,
-      int avatarId,
-      String workerId
-    ) {
-      setState(() {
-        isEditing = true;
-      });
-
-      Navigator.pop(context); // Close the more options dialog
-
-      showWorkerDialog(
-        firstName,
-        lastName,
-        avatarId,
-        workerId
-      );
-    }
-
-    /// Show the more options dialog
-    void showMoreOptionsDialog(
-      String firstName, 
-      String lastName, 
-      String workerId, 
-      int avatarId
-    ) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return WorkerMoreOptionsDialog(
-            highlightColor: highlightColor,
-            firstName: firstName,
-            lastName: lastName,
-            workerId: workerId,
-            avatarId: avatarId,
-            displayEditDialog: (int editedAvatarId) => openEditDialog(
-                context, 
-                firstName, 
-                lastName,
-                editedAvatarId,
-                workerId,
-              ),
-            deleteWorker: () {
-              context.read<OfficeDetailsViewModel>().deleteWorker(
-                office.officeId,
-                workerId
-              );
-            }
-          );
-        },
-      );
-    }
-    
-    // Update the list view based on the search query
-    void updateListView(String searchQuery) {
-      final filteredWorkers = context.read<OfficeDetailsViewModel>().searchWorkers(
-        office.officeId,
-        searchQuery
-      );
-
-      context.read<OfficeDetailsViewModel>().updateWorkers(filteredWorkers);
-    }
-
-    // Listen for changes in the search bar
     _searchBarController.addListener(() {
       updateListView(_searchBarController.text);
     });
 
-    // Fetch the workers for the office when the screen loads
     context.read<OfficeDetailsViewModel>().fetchWorkers(office.officeId);
+  }
+
+  @override
+  void dispose() {
+    _searchBarController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    super.dispose();
+  }
+
+  // Update the list view based on the search query
+  void updateListView(String searchQuery) {
+    final filteredWorkers = context.read<OfficeDetailsViewModel>().searchWorkers(
+      office.officeId,
+      searchQuery
+    );
+
+    context.read<OfficeDetailsViewModel>().updateWorkers(filteredWorkers);
+  }
+
+      /// Save the worker to the database
+  void saveWorker(int avatarId, String? workerId) {
+    if (!isEditing) {
+      context.read<OfficeDetailsViewModel>().createWorker(
+        firstNameController.text,
+        lastNameController.text,
+        office.officeId, 
+        avatarId
+      );
+      return;
+    }
+    context.read<OfficeDetailsViewModel>().updateWorker(
+      firstNameController.text,
+      lastNameController.text,
+      office.officeId, 
+      avatarId,
+      workerId!
+    );
+    setState(() {
+      isEditing = false;
+    });
+  }
+
+  /// Show the worker dialog
+  void showWorkerDialog(String? firstName, String? lastName, int? avatarId, String? workerId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return WorkerDialog(
+          firstNameController: firstNameController..text = firstName ?? '',
+          lastNameController: lastNameController..text = lastName ?? '',
+          highlightColor: highlightColor,
+          saveWorker: (int _) => saveWorker(_, workerId),
+          isEditing: isEditing,
+          avatarId: avatarId,
+          workerId: workerId
+        );
+      },
+    );
+  }
+
+  /// Open the edit dialog
+  void openEditDialog(BuildContext context, String firstName, String lastName, int avatarId, String workerId) {
+    setState(() {
+      isEditing = true;
+    });
+
+    Navigator.pop(context); // Close the more options dialog
+
+    showWorkerDialog(firstName, lastName, avatarId, workerId);
+  }
+
+  /// Show the more options dialog
+  void showMoreOptionsDialog(
+    String firstName, 
+    String lastName, 
+    String workerId, 
+    int avatarId
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return WorkerMoreOptionsDialog(
+          highlightColor: highlightColor,
+          firstName: firstName,
+          lastName: lastName,
+          workerId: workerId,
+          avatarId: avatarId,
+          displayEditDialog: (int editedAvatarId) => openEditDialog(
+              context, 
+              firstName, 
+              lastName,
+              editedAvatarId,
+              workerId,
+            ),
+          deleteWorker: () {
+            context.read<OfficeDetailsViewModel>().deleteWorker(
+              office.officeId,
+              workerId
+            );
+          }
+        );
+      },
+    );
+  }
+  
+
+  @override
+  Widget build(BuildContext context) {
 
     return SafeArea(
       child: Consumer<OfficeDetailsViewModel>(
