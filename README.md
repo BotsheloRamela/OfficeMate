@@ -43,6 +43,31 @@ flutter pub run build_runner build
 ```
 This command generates code for various purposes such as JSON serialization. Make sure to run it whenever you make changes to relevant files.
 
+## Building the App
+To build and export the OfficeMate app for Android, iOS, and Web platforms, follow these steps after setting up the project as described:
+
+### Android:
+1. **Build APK:** To generate an APK file for Android devices, open the terminal in your project directory and run:
+   ```bash
+   flutter build apk --dart-define-from-file=.env.prod
+   ```
+2. **Build AAB:** For Android App Bundles (AAB), use:
+   ```bash
+   flutter build appbundle  --dart-define-from-file=.env.prod
+   ```
+
+### iOS
+1. **Build IPA:** To create an IPA file for iOS devices, ensure you have Xcode installed and then execute:
+   ```bash
+   flutter build ios --release  --dart-define-from-file=.env.prod
+   ```
+
+### Web
+1. **Build Web Application:** For web deployment, including generating a production-ready version of your app, use:
+   ```bash
+   flutter build web --dart-define-from-file=.env.prod
+   ```
+
 ## App Screenshots
 <p>
    <p>
