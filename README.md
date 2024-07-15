@@ -11,6 +11,22 @@ Here's a breakdown of supported platforms:
 - **Mobile:** The application is available for both iOS and Android devices.
 - **Web:** A web-based version is also accessible at https://officemate-9237b.web.app/, hosted on Firebase Hosting. This makes it convenient to use on any device with a web browser, regardless of operating system.
 
+## App Screenshots
+<p>
+   <p>
+      <img src="appScreenshots/1.png" width="185" height="400" alt="Home"/> 
+      <img src="appScreenshots/2.png" width="185" height="400" alt="Add Office"/>
+      <img src="appScreenshots/8.png" width="185" height="400" alt="Edit Office"/>
+      <img src="appScreenshots/3.png" width="185" height="400" alt="Office Info"/>
+   </p>
+   <p>
+      <img src="appScreenshots/4.png" width="185" height="400" alt="Add Staff 1/2"/>
+      <img src="appScreenshots/5.png" width="185" height="400" alt="Add Staff 2/2"/>
+      <img src="appScreenshots/6.png" width="185" height="400" alt="Staff Options"/>
+      <img src="appScreenshots/7.png" width="185" height="400" alt="Delete Staff"/>
+   </p>
+</p>
+
 ## Setup Instructions
 OfficeMate is built Flutter version **3.19.4** on channel stable and Dart version **3.3.2**, so those are the minimum requirements to ensure the project runs without any issues.
 
@@ -67,22 +83,6 @@ To build and export the OfficeMate app for Android, iOS, and Web platforms, foll
    ```bash
    flutter build web --dart-define-from-file=.env.prod
    ```
-
-## App Screenshots
-<p>
-   <p>
-      <img src="appScreenshots/1.png" width="185" height="400" alt="Home"/> 
-      <img src="appScreenshots/2.png" width="185" height="400" alt="Add Office"/>
-      <img src="appScreenshots/8.png" width="185" height="400" alt="Edit Office"/>
-      <img src="appScreenshots/3.png" width="185" height="400" alt="Office Info"/>
-   </p>
-   <p>
-      <img src="appScreenshots/4.png" width="185" height="400" alt="Add Staff 1/2"/>
-      <img src="appScreenshots/5.png" width="185" height="400" alt="Add Staff 2/2"/>
-      <img src="appScreenshots/6.png" width="185" height="400" alt="Staff Options"/>
-      <img src="appScreenshots/7.png" width="185" height="400" alt="Delete Staff"/>
-   </p>
-</p>
 
 
 ## Architecture
